@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIKTOK MOBILE - تيك توك موبايل</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neonRed: '#ff0055',
+                        neonGlow: '#ff3300',
+                        darkBg: '#0b0b12',
+                        cardBg: '#141422',
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(255, 0, 85, 0.4), 0 0 40px rgba(255, 0, 85, 0.1)',
+                        'neon-sm': '0 0 10px rgba(255, 0, 85, 0.3)',
+                        'neon-hover': '0 0 25px rgba(255, 0, 85, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #0b0b12;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(20, 20, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 0, 85, 0.15);
+        }
+
+        .glass-card {
+            background: rgba(26, 26, 44, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 0, 85, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(255, 0, 85, 0.2);
+        }
+
+        /* Neon Glow Text & Elements */
+        .neon-text-glow {
+            text-shadow: 0 0 12px rgba(255, 0, 85, 0.6), 0 0 25px rgba(255, 0, 85, 0.3);
+        }
+
+        .neon-border {
+            border: 1px solid #ff0055;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0b12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a40;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff0055;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-neonRed selection:text-white">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-neonRed/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-neonRed to-neonGlow flex items-center justify-center text-white text-2xl shadow-neon">
+                    <i class="fa-solid font-bold fa-mobile-screen-button"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-wider text-white flex items-center gap-1">
+                        TIKTOK <span class="text-neonRed neon-text-glow">MOBILE</span>
+                    </h1>
+                    <p class="text-[10px] text-gray-400 font-semibold tracking-widest uppercase">متجر الإكسسوارات والهواتف</p>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Search Trigger Input -->
+                <div class="relative hidden md:block w-64">
+                    <input type="text" id="searchInput" oninput="filterProducts()" placeholder="بحث عن منتج..." 
+                        class="w-full bg-darkBg/80 border border-gray-800 rounded-xl px-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-neonRed transition-all">
+                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-500 text-sm"></i>
+                </div>
+
+                <!-- Admin Action Button (Will change state dynamically) -->
+                <div id="authArea">
+                    <button onclick="openLoginModal()" class="flex items-center gap-2 bg-gradient-to-r from-neonRed to-red-600 hover:from-red-600 hover:to-neonRed text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-neon-sm hover:shadow-neon transition-all duration-300">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>تسجيل دخول المالك</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner Section -->
+    <section class="relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-neonRed/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 -left-24 w-80 h-80 bg-neonGlow/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="glass-panel rounded-3xl p-8 md:p-12 border border-neonRed/30 relative z-10 overflow-hidden shadow-neon">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-neonRed/10 text-neonRed border border-neonRed/30">
+                        <i class="fa-solid fa-bolt text-xs"></i> أفضل العروض والخصومات
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-black text-white leading-tight">
+                        عالم الأجهزة والتكنولوجيا بين يديك في <span class="text-neonRed neon-text-glow">TIKTOK MOBILE</span>
+                    </h2>
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed">
+                        اكتشف أحدث الشواحن، السماعات، الكفرات، واكسسوارات الأجهزة الذكية بأفضل الأسعار وأعلى جودة ضمان.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <a href="https://wa.me/962000000000" target="_blank" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-lg hover:shadow-emerald-900/40">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span>تواصل عبر الواتساب</span>
+                        </a>
+                        <a href="tel:00962000000000" class="flex items-center gap-2 bg-darkBg hover:bg-black text-white border border-gray-700 hover:border-neonRed px-6 py-3 rounded-xl font-bold text-sm transition-all">
+                            <i class="fa-solid fa-phone text-neonRed"></i>
+                            <span>اتصل بنا فوراً</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:flex justify-center items-center relative">
+                    <div class="w-64 h-64 md:w-80 md:h-80 rounded-full bg-gradient-to-tr from-neonRed/20 to-transparent flex items-center justify-center animate-pulse">
+                        <i class="fa-solid fa-mobile-retro text-9xl text-neonRed/80 neon-text-glow"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Owner Controls Panel (Hidden by default, shown when logged in) -->
+    <section id="ownerControlPanel" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div class="bg-gradient-to-r from-red-950/80 via-cardBg to-red-950/80 border-2 border-neonRed rounded-2xl p-6 shadow-neon">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-neonRed/20 flex items-center justify-center text-neonRed text-xl">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            لوحة تحكم المالك 
+                            <span class="text-xs bg-neonRed text-white px-2 py-0.5 rounded-full font-normal">نشط الأن</span>
+                        </h3>
+                        <p class="text-xs text-gray-400">يمكنك هنا إضافة أو حذف المنتجات وإدارتها بسهولة</p>
+                    </div>
+                </div>
+                
+                <button onclick="openAddProductModal()" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-neonRed hover:bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-neon transition-all transform hover:scale-105">
+                    <i class="fa-solid fa-plus-circle text-lg"></i>
+                    <span>إضافة منتج جديد (+)</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Filter & Search Bar -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <!-- Search Bar Mobile -->
+        <div class="block md:hidden mb-4">
+            <div class="relative">
+                <input type="text" id="searchInputMobile" oninput="filterProducts()" placeholder="بحث عن منتج..." 
+                    class="w-full bg-cardBg border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-neonRed">
+                <i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-500"></i>
+            </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar scroll-smooth" id="categoryFilters">
+            <!-- Dynamically populated by JS -->
+        </div>
+    </section>
+
+    <!-- Products Showcase Section -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 flex-grow">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-extrabold text-white flex items-center gap-2">
+                <i class="fa-solid fa-store text-neonRed"></i>
+                <span id="currentCategoryTitle">كل المنتجات</span>
+            </h2>
+            <span id="productCount" class="text-xs font-semibold bg-gray-800 text-gray-300 px-3 py-1 rounded-full">0 منتج</span>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Product Cards insert here dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-16 glass-panel rounded-3xl">
+            <i class="fa-solid fa-box-open text-6xl text-gray-600 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-300 mb-1">لا توجد منتجات متوفرة</h3>
+            <p class="text-sm text-gray-500">حاول البحث بكلمة أخرى أو اختر تصنيفاً آخر.</p>
+        </div>
+    </main>
+
+    <!-- Services & Features Section -->
+    <section class="border-t border-gray-800/80 bg-cardBg/40 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <h2 class="text-2xl font-bold text-white mb-2">خدمات مميزة في <span class="text-neonRed">TIKTOK MOBILE</span></h2>
+                <p class="text-xs text-gray-400">نحن نقدم أفضل خدمة لعملائنا الكرام مع ضمان الجودة والسرعة</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl text-center space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-neonRed/10 text-neonRed flex items-center justify-center text-2xl mx-auto border border-neonRed/20">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">صيانة فورية ومتقنة</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">صيانة وتصليح كافة أنواع الهواتف الذكية بأيدي فنيين محترفين وقطع غيار أصلية.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl text-center space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-neonRed/10 text-neonRed flex items-center justify-center text-2xl mx-auto border border-neonRed/20">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">منتجات مكفولة 100%</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">جميع الشواحن والسماعات والإكسسوارات لدينا أصلية مع ضمان التشغيل والاستبدال.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl text-center space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-neonRed/10 text-neonRed flex items-center justify-center text-2xl mx-auto border border-neonRed/20">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">استشارات واستفسارات</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">فريقنا جاهز دائماً للإجابة عن استفساراتكم واختيار الجهاز أو الاكسسوار الأنسب لكم.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-darkBg border-t border-neonRed/20 py-8 text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center text-white font-bold text-xs">TT</div>
+                <span class="font-bold text-white">TIKTOK MOBILE</span> &copy; 2026 - جميع الحقوق محفوظة
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="https://wa.me/962000000000" target="_blank" class="hover:text-neonRed transition-colors"><i class="fa-brands fa-whatsapp text-lg"></i></a>
+                <a href="tel:00962000000000" class="hover:text-neonRed transition-colors"><i class="fa-solid fa-phone text-lg"></i></a>
+                <a href="#" class="hover:text-neonRed transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel border-2 border-neonRed w-full max-w-md rounded-3xl p-6 sm:p-8 relative shadow-neon animate-fade-in">
+            <button onclick="closeLoginModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6 space-y-2">
+                <div class="w-16 h-16 rounded-full bg-neonRed/20 text-neonRed text-3xl flex items-center justify-center mx-auto border border-neonRed/40 shadow-neon-sm">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">تسجيل دخول المالك</h3>
+                <p class="text-xs text-gray-400">أدخل اسم المستخدم وكلمة المرور للوصول لإدارة المنتجات</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">اسم المستخدم</label>
+                    <div class="relative">
+                        <input type="text" id="usernameInput" required placeholder="admin"
+                            class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neonRed pl-10">
+                        <i class="fa-solid fa-user absolute left-3 top-3.5 text-gray-500"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">كلمة المرور</label>
+                    <div class="relative">
+                        <input type="password" id="passwordInput" required placeholder="••••••••"
+                            class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neonRed pl-10">
+                        <i class="fa-solid fa-key absolute left-3 top-3.5 text-gray-500"></i>
+                    </div>
+                </div>
+
+                <div id="loginError" class="hidden text-xs text-red-400 bg-red-950/50 border border-red-800 rounded-lg p-2.5 text-center">
+                    اسم المستخدم أو كلمة المرور غير صحيحة!
+                </div>
+
+                <button type="submit" class="w-full bg-neonRed hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-all shadow-neon">
+                    تسجيل الدخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel border-2 border-neonRed w-full max-w-lg rounded-3xl p-6 sm:p-8 relative shadow-neon max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAddProductModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6 space-y-1">
+                <h3 class="text-2xl font-black text-white flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cart-plus text-neonRed"></i>
+                    إضافة منتج جديد
+                </h3>
+                <p class="text-xs text-gray-400">ملء كافة الحقول لإدراج المنتج بالمتجر مباشرة</p>
+            </div>
+
+            <form id="addProductForm" onsubmit="handleAddProduct(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">اسم المنتج *</label>
+                    <input type="text" id="prodName" required placeholder="مثال: شاحن سريع 20 واط Type-C"
+                        class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-neonRed">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-300 mb-1">السعر (بالدينار) *</label>
+                        <input type="number" id="prodPrice" min="0.1" step="0.1" required placeholder="12.5"
+                            class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-neonRed">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-300 mb-1">الكمية المتوفرة *</label>
+                        <input type="number" id="prodQty" min="1" required placeholder="10"
+                            class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-neonRed">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">القسم / الفئة *</label>
+                    <select id="prodCategory" required class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-neonRed">
+                        <option value="شواحن">شواحن وكوابل</option>
+                        <option value="سماعات">سماعات وبلوتوث</option>
+                        <option value="كفرات وحماية">كفرات ولاصق حماية</option>
+                        <option value="هواتف">هواتف وأجهزة</option>
+                        <option value="كمبيوتر ولابتوب">كمبيوتر ولابتوب</option>
+                        <option value="إكسسوارات أخرى">إكسسوارات أخرى</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">صورة المنتج (رابط أو رفع ملف) *</label>
+                    <input type="url" id="prodImage" placeholder="https://... أو اختر ملفاً من الأسفل"
+                        class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-neonRed mb-2">
+                    
+                    <div class="flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-700 rounded-xl cursor-pointer hover:border-neonRed bg-darkBg/50 transition-colors">
+                            <div class="flex flex-col items-center justify-center pt-3 pb-3">
+                                <i class="fa-solid fa-cloud-arrow-up text-xl text-gray-400 mb-1"></i>
+                                <p class="text-xs text-gray-400">انقر لرفع صورة من جهازك</p>
+                            </div>
+                            <input type="file" id="prodFile" accept="image/*" class="hidden" onchange="convertFileToBase64(this)">
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-neonRed hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-all shadow-neon mt-4">
+                    حفظ ونشر المنتج
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Store Categories Configuration
+        const CATEGORIES = [
+            { id: 'all', name: 'الكل', icon: 'fa-layer-group' },
+            { id: 'شواحن', name: 'شواحن', icon: 'fa-bolt' },
+            { id: 'سماعات', name: 'سماعات', icon: 'fa-headphones' },
+            { id: 'كفرات وحماية', name: 'كفرات وحماية', icon: 'fa-shield' },
+            { id: 'هواتف', name: 'هواتف', icon: 'fa-mobile-screen' },
+            { id: 'كمبيوتر ولابتوب', name: 'كمبيوتر ولابتوب', icon: 'fa-laptop' },
+            { id: 'إكسسوارات أخرى', name: 'إكسسوارات أخرى', icon: 'fa-plug' },
+        ];
+
+        // Initial Mock Products Data
+        const initialProducts = [
+            {
+                id: '1',
+                name: 'شاحن سريع Anker 20W PD',
+                price: 15.0,
+                qty: 12,
+                category: 'شواحن',
+                image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500&q=80'
+            },
+            {
+                id: '2',
+                name: 'سماعة بلوتوث لاسلكية AirPods Pro',
+                price: 45.0,
+                qty: 5,
+                category: 'سماعات',
+                image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=500&q=80'
+            },
+            {
+                id: '3',
+                name: 'كفر حماية ضد الصدمات iPhone 15 Pro',
+                price: 8.5,
+                qty: 20,
+                category: 'كفرات وحماية',
+                image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=500&q=80'
+            },
+            {
+                id: '4',
+                name: 'باور بنك 20000 مللي أمبير الشحن السريع',
+                price: 25.0,
+                qty: 8,
+                category: 'شواحن',
+                image: 'https://images.unsplash.com/photo-1609592424009-21bd1b7774d7?w=500&q=80'
+            }
+        ];
+
+        // Global Application State
+        let products = JSON.parse(localStorage.getItem('tiktok_products')) || initialProducts;
+        let isAdminLoggedIn = localStorage.getItem('tiktok_admin_logged') === 'true';
+        let activeCategory = 'all';
+        let uploadedBase64Image = '';
+
+        // Initialize App on DOM Loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderAuthState();
+            renderProducts();
+        });
+
+        // Render Auth Button & Admin Panel Visibility
+        function renderAuthState() {
+            const authArea = document.getElementById('authArea');
+            const ownerControlPanel = document.getElementById('ownerControlPanel');
+
+            if (isAdminLoggedIn) {
+                authArea.innerHTML = `
+                    <button onclick="handleLogout()" class="flex items-center gap-2 bg-gray-800 hover:bg-red-950 text-red-400 border border-red-800/60 px-4 py-2.5 rounded-xl font-bold text-sm transition-all">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>تسجيل الخروج (أدمن)</span>
+                    </button>
+                `;
+                ownerControlPanel.classList.remove('hidden');
+            } else {
+                authArea.innerHTML = `
+                    <button onclick="openLoginModal()" class="flex items-center gap-2 bg-gradient-to-r from-neonRed to-red-600 hover:from-red-600 hover:to-neonRed text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-neon-sm hover:shadow-neon transition-all duration-300">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>تسجيل دخول المالك</span>
+                    </button>
+                `;
+                ownerControlPanel.classList.add('hidden');
+            }
+            renderProducts();
+        }
+
+        // Handle Login Submission
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('usernameInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+            const errorEl = document.getElementById('loginError');
+
+            if (user === 'admin' && pass === '12345') {
+                isAdminLoggedIn = true;
+                localStorage.setItem('tiktok_admin_logged', 'true');
+                errorEl.classList.add('hidden');
+                closeLoginModal();
+                renderAuthState();
+            } else {
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            isAdminLoggedIn = false;
+            localStorage.setItem('tiktok_admin_logged', 'false');
+            renderAuthState();
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        function openAddProductModal() {
+            uploadedBase64Image = '';
+            document.getElementById('addProductForm').reset();
+            document.getElementById('addProductModal').classList.remove('hidden');
+        }
+        function closeAddProductModal() {
+            document.getElementById('addProductModal').classList.add('hidden');
+        }
+
+        // Convert Uploaded Image File to Base64 String
+        function convertFileToBase64(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedBase64Image = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Handle Add New Product
+        function handleAddProduct(event) {
+            event.preventDefault();
+            const name = document.getElementById('prodName').value.trim();
+            const price = parseFloat(document.getElementById('prodPrice').value);
+            const qty = parseInt(document.getElementById('prodQty').value);
+            const category = document.getElementById('prodCategory').value;
+            const imageUrl = document.getElementById('prodImage').value.trim();
+
+            const finalImage = uploadedBase64Image || imageUrl || 'https://placehold.co/400x300/141422/ff0055?text=TIKTOK+MOBILE';
+
+            const newProduct = {
+                id: Date.now().toString(),
+                name,
+                price,
+                qty,
+                category,
+                image: finalImage
+            };
+
+            products.unshift(newProduct);
+            saveProductsToStorage();
+            closeAddProductModal();
+            renderProducts();
+        }
+
+        // Delete Product (Only callable if logged in)
+        function deleteProduct(id) {
+            if (!isAdminLoggedIn) return;
+            if (confirm('هل أنت تأكد من رغبتك في حذف هذا المنتج؟')) {
+                products = products.filter(p => p.id !== id);
+                saveProductsToStorage();
+                renderProducts();
+            }
+        }
+
+        function saveProductsToStorage() {
+            localStorage.setItem('tiktok_products', JSON.stringify(products));
+        }
+
+        // Render Category Filter Chips
+        function renderCategories() {
+            const container = document.getElementById('categoryFilters');
+            container.innerHTML = CATEGORIES.map(cat => `
+                <button onclick="setCategory('${cat.id}')" 
+                    class="filter-chip whitespace-nowrap flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all duration-300 ${activeCategory === cat.id ? 'bg-neonRed text-white shadow-neon' : 'bg-cardBg text-gray-400 hover:text-white border border-gray-800'}">
+                    <i class="fa-solid ${cat.icon}"></i>
+                    <span>${cat.name}</span>
+                </button>
+            `).join('');
+        }
+
+        function setCategory(catId) {
+            activeCategory = catId;
+            renderCategories();
+            renderProducts();
+
+            const titleEl = document.getElementById('currentCategoryTitle');
+            const found = CATEGORIES.find(c => c.id === catId);
+            titleEl.textContent = found ? found.name : 'كل المنتجات';
+        }
+
+        // Filter & Render Products
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const productCount = document.getElementById('productCount');
+            
+            const searchQuery = (document.getElementById('searchInput').value || document.getElementById('searchInputMobile').value || '').toLowerCase();
+
+            const filtered = products.filter(p => {
+                const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            productCount.textContent = `${filtered.length} منتج`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(product => `
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between relative group border border-gray-800 hover:border-neonRed/50 transition-all">
+                    
+                    <!-- Delete Button for Admin Only -->
+                    ${isAdminLoggedIn ? `
+                        <button onclick="deleteProduct('${product.id}')" title="حذف المنتج"
+                            class="absolute top-3 left-3 bg-red-600/90 hover:bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-lg transition-transform hover:scale-110">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    ` : ''}
+
+                    <div>
+                        <!-- Product Image Container -->
+                        <div class="relative h-48 w-full bg-darkBg/60 overflow-hidden">
+                            <img src="${product.image}" alt="${product.name}" 
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x300/141422/ff0055?text=TIKTOK+MOBILE';">
+                            <span class="absolute bottom-2 right-2 bg-darkBg/80 backdrop-blur-md text-neonRed text-[10px] font-bold px-2.5 py-1 rounded-lg border border-neonRed/30">
+                                ${product.category}
+                            </span>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="p-4 space-y-2">
+                            <h3 class="font-bold text-white text-base line-clamp-2 leading-snug">${product.name}</h3>
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>الكمية المتاحة: <strong class="text-white">${product.qty}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer & Price -->
+                    <div class="p-4 pt-0 border-t border-gray-800/40 mt-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-gray-400 block">السعر</span>
+                            <span class="text-xl font-black text-neonRed neon-text-glow">${product.price} <span class="text-xs font-normal text-white">د.أ</span></span>
+                        </div>
+
+                        <a href="https://wa.me/962000000000?text=${encodeURIComponent('مرحباً TIKTOK MOBILE، أود الاستفسار عن: ' + product.name)}" 
+                            target="_blank"
+                            class="bg-emerald-600 hover:bg-emerald-500 text-white p-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>طلب</span>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts() {
+            renderProducts();
+        }
+    </script>
+</body>
+</html>
