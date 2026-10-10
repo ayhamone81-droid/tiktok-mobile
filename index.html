@@ -1,1000 +1,757 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIKTOK MOBILE | صيانة وبيع الهواتف</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TIKTOK MOBILE - متجر تيك توك موبايل</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#ff0055',
+                            darkRed: '#d90048',
+                            cyan: '#00f2fe',
+                            dark: '#0a0a0c',
+                            card: '#121216',
+                            border: '#22222a'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon-red': '0 0 20px rgba(255, 0, 85, 0.4)',
+                        'neon-red-lg': '0 0 35px rgba(255, 0, 85, 0.6)',
+                        'neon-cyan': '0 0 20px rgba(0, 242, 254, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", Tahoma, sans-serif;
-        }
-
-        :root {
-            --black: #050505;
-            --dark: #0c0c0f;
-            --card: #111114;
-            --card2: #17171b;
-            --white: #ffffff;
-            --gray: #a4a4ad;
-            --accent: #ff0055;
-            --accent-glow: rgba(255, 0, 85, 0.25);
-            --green: #25d366;
-            --red: #ff3b5c;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            background: var(--black);
-            color: var(--white);
+            font-family: 'Cairo', sans-serif;
+            background-color: #0a0a0c;
+            color: #f3f4f6;
             overflow-x: hidden;
         }
 
-        /* خلفية متوهجة متقدمة */
-        body::before {
-            content: "";
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            background: var(--accent);
-            filter: blur(160px);
-            opacity: .07;
-            top: -150px;
-            right: -100px;
-            z-index: -2;
+        /* Custom Scrollbar for desktop & horizontal swipe for mobile */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #22222a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff0055;
         }
 
-        /* =========================
-           HEADER
-        ========================= */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 75px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 5%;
-            background: rgba(5, 5, 5, .85);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,.08);
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        nav {
-            display: flex;
-            gap: 25px;
-        }
-
-        nav a {
-            color: #ddd;
-            text-decoration: none;
-            font-size: 14px;
-            transition: .3s;
-        }
-
-        nav a:hover {
-            color: var(--accent);
-        }
-
-        .auth-btn-header {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.15);
-            color: white;
-            padding: 7px 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .auth-btn-header:hover {
-            border-color: var(--accent);
-            background: rgba(255,0,85,.1);
-        }
-
-        /* =========================
-           HERO SECTION
-        ========================= */
-        .hero {
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 130px 5% 60px;
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 15px;
-            border-radius: 50px;
-            background: rgba(255,0,85,.08);
-            border: 1px solid rgba(255,0,85,.25);
-            color: var(--accent);
-            font-size: 12px;
-            margin-bottom: 20px;
-        }
-
-        .hero h1 {
-            font-size: clamp(40px, 7vw, 75px);
-            line-height: 1.1;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-        }
-
-        .hero h1 span {
-            color: var(--accent);
-        }
-
-        .hero p {
-            color: var(--gray);
-            max-width: 600px;
-            margin: 0 auto 30px;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-
-        .btn {
-            border: none;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 0 25px var(--accent-glow);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            opacity: .9;
-        }
-
-        .btn-dark {
-            background: rgba(255,255,255,.06);
-            color: white;
-            border: 1px solid rgba(255,255,255,.1);
-        }
-
-        .btn-dark:hover {
-            background: rgba(255,255,255,.1);
-        }
-
-        /* =========================
-           SECTIONS
-        ========================= */
-        section {
-            padding: 80px 5%;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 45px;
-        }
-
-        .section-title h2 {
-            font-size: clamp(28px, 4vw, 38px);
-            margin-top: 5px;
-        }
-
-        .section-title p {
-            color: var(--gray);
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        /* =========================
-           SERVICES
-        ========================= */
-        .services {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .service {
-            background: var(--card);
-            border: 1px solid rgba(255,255,255,.07);
-            padding: 25px 20px;
-            border-radius: 18px;
-            transition: .3s;
-        }
-
-        .service:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,0,85,.3);
-        }
-
-        .service-icon {
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-
-        .service h3 {
-            font-size: 17px;
-            margin-bottom: 8px;
-        }
-
-        .service p {
-            color: var(--gray);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        /* =========================
-           PRODUCTS SECTION & CATEGORIES
-        ========================= */
-        .products-header-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .categories-scroll {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            width: 100%;
-            scrollbar-width: none; /* Firefox */
-        }
-        .categories-scroll::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
-        }
-
-        .cat-chip {
-            background: var(--card);
-            border: 1px solid rgba(255,255,255,.08);
-            color: var(--gray);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: .3s;
-        }
-
-        .cat-chip.active, .cat-chip:hover {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .product-card {
-            background: var(--card);
-            border: 1px solid rgba(255,255,255,.07);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: .3s;
-            position: relative;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,0,85,.3);
-        }
-
-        .product-img-box {
-            width: 100%;
-            height: 200px;
-            background: #080808;
-            position: relative;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-badge-cat {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,.75);
-            backdrop-filter: blur(5px);
-            color: white;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,.1);
-        }
-
-        .product-details {
-            padding: 15px;
-        }
-
-        .product-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .product-footer-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .product-price {
-            color: var(--accent);
-            font-size: 17px;
-            font-weight: 900;
-        }
-
-        .product-price span {
-            font-size: 11px;
-            color: var(--gray);
-            font-weight: normal;
-        }
-
-        .product-qty {
-            font-size: 12px;
-            color: var(--gray);
-            background: rgba(255,255,255,.05);
-            padding: 3px 8px;
-            border-radius: 5px;
-        }
-
-        .delete-btn-admin {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: rgba(0,0,0,.8);
-            color: white;
-            border: 1px solid rgba(255,255,255,.15);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: .2s;
-        }
-
-        .delete-btn-admin:hover {
-            background: var(--red);
-        }
-
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--gray);
-            border: 1px dashed rgba(255,255,255,.1);
-            border-radius: 16px;
-        }
-
-        /* =========================
-           CONTACT & FOOTER
-        ========================= */
-        .contact-box {
-            max-width: 750px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 50px 25px;
-            background: linear-gradient(145deg, rgba(255,0,85,.05), rgba(15,15,20,1));
-            border: 1px solid rgba(255,0,85,.15);
-            border-radius: 24px;
-        }
-
-        .contact-box h2 {
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
-
-        .contact-box p {
-            color: var(--gray);
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        .contact-btns {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn-whatsapp {
-            background: var(--green);
-            color: white;
-        }
-
-        footer {
-            border-top: 1px solid rgba(255,255,255,.07);
-            padding: 25px 5%;
-            text-align: center;
-            color: var(--gray);
-            font-size: 13px;
-        }
-
-        /* =========================
-           MODALS (Login & Add Product)
-        ========================= */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.8);
-            backdrop-filter: blur(8px);
+        /* Hide Scrollbar for Horizontal Scrollable elements on mobile */
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Neon Glow Utility */
+        .glow-text-red {
+            text-shadow: 0 0 12px rgba(255, 0, 85, 0.6);
+        }
+        
+        .glow-border {
+            border-color: #ff0055;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+        }
+
+        /* Touch target enhancement for mobile buttons */
+        .touch-action-btn {
+            min-height: 44px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
-            padding: 15px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-container {
-            width: 100%;
-            max-width: 420px;
-            background: var(--card2);
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 20px 50px rgba(0,0,0,.7);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h3 {
-            font-size: 20px;
-        }
-
-        .close-modal-btn {
-            background: rgba(255,255,255,.06);
-            border: none;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            color: #ddd;
-            margin-bottom: 6px;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 11px 14px;
-            background: #080808;
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--accent);
-        }
-
-        .img-preview-box {
-            width: 100%;
-            height: 130px;
-            border: 1px dashed rgba(255,255,255,.15);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray);
-            font-size: 13px;
-            overflow: hidden;
-            margin-top: 5px;
-            background: #080808;
-        }
-
-        .img-preview-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-submit-btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: var(--accent);
-            color: white;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        /* التحكم بظهور أزرار المالك */
-        .admin-only {
-            display: none !important;
-        }
-
-        body.is-logged-in .admin-only {
-            display: inline-flex !important;
-        }
-        body.is-logged-in .admin-only-block {
-            display: block !important;
-        }
-
-        /* =========================================
-           تعديلات الاستجابة التامة للهواتف المحمولة
-        ========================================= */
-        @media (max-width: 900px) {
-            .services, .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            header {
-                padding: 0 15px;
-                height: 65px;
-            }
-
-            .logo {
-                font-size: 18px;
-            }
-
-            nav {
-                display: none; /* إخفاء الروابط العلوية في الهواتف الضيقة للحفاظ على المساحة */
-            }
-
-            .hero {
-                padding: 100px 15px 40px;
-                min-height: auto;
-            }
-
-            .hero h1 {
-                font-size: 38px;
-                letter-spacing: -1px;
-            }
-
-            .hero p {
-                font-size: 14px;
-            }
-
-            section {
-                padding: 50px 15px;
-            }
-
-            .services, .products-grid {
-                grid-template-columns: 1fr; /* عرض عنصر واحد في السطر على الهواتف الصغيرة لترتيب رائع ومثالي */
-                gap: 15px;
-            }
-
-            .products-header-area {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .add-product-main-btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .contact-box {
-                padding: 30px 15px;
-            }
-
-            .contact-box h2 {
-                font-size: 26px;
-            }
         }
     </style>
 </head>
-<body id="bodyTag">
+<body class="bg-brand-dark text-gray-100 flex flex-col min-h-screen">
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo">TIKTOK <span>MOBILE</span></div>
-        <nav>
-            <a href="#home">الرئيسية</a>
-            <a href="#services">الخدمات</a>
-            <a href="#products">المنتجات</a>
-            <a href="#contact">تواصل معنا</a>
-        </nav>
-        <div class="header-actions">
-            <button class="auth-btn-header" id="authBtnText" onclick="handleAuthClick()">تسجيل دخول المالك</button>
+    <!-- Navbar Header -->
+    <header class="sticky top-0 z-40 bg-brand-dark/90 backdrop-blur-md border-b border-brand-border/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-red to-pink-600 flex items-center justify-center text-white shadow-neon-red group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xl sm:text-2xl font-black tracking-wider text-white flex items-center gap-1">
+                            TIKTOK <span class="text-brand-red glow-text-red">MOBILE</span>
+                        </span>
+                        <span class="text-[10px] text-gray-400 -mt-1 tracking-widest uppercase">Electronics Store</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#hero" class="text-gray-300 hover:text-brand-red font-semibold transition-colors duration-200">الرئيسية</a>
+                    <a href="#categories" class="text-gray-300 hover:text-brand-red font-semibold transition-colors duration-200">الأقسام</a>
+                    <a href="#products" class="text-gray-300 hover:text-brand-red font-semibold transition-colors duration-200">المنتجات</a>
+                    <a href="#services" class="text-gray-300 hover:text-brand-red font-semibold transition-colors duration-200">خدماتنا</a>
+                    <a href="#about" class="text-gray-300 hover:text-brand-red font-semibold transition-colors duration-200">عن المحل</a>
+                </nav>
+
+                <!-- Header Actions (Admin Toggle & Mobile Menu Toggle) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Admin Control Button -->
+                    <button id="adminBtn" onclick="toggleAdminModal()" class="touch-action-btn px-3 sm:px-4 py-2 rounded-xl border border-brand-border hover:border-brand-red bg-brand-card hover:bg-brand-red/10 text-xs sm:text-sm font-bold text-gray-200 transition-all duration-200 flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield text-brand-red" id="adminIcon"></i>
+                        <span id="adminBtnText">دخول الأدمن</span>
+                    </button>
+
+                    <!-- Mobile Hamburger Menu Button -->
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden touch-action-btn p-2.5 rounded-xl border border-brand-border bg-brand-card text-gray-200 hover:text-brand-red focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-brand-border bg-brand-card/95 backdrop-blur-lg px-4 pt-3 pb-6 space-y-3 transition-all duration-300">
+            <a href="#hero" onclick="closeMobileMenu()" class="block py-2.5 px-4 rounded-lg text-gray-200 hover:bg-brand-red/10 hover:text-brand-red font-semibold transition-colors">
+                <i class="fa-solid fa-house ml-2 text-brand-red"></i> الرئيسية
+            </a>
+            <a href="#categories" onclick="closeMobileMenu()" class="block py-2.5 px-4 rounded-lg text-gray-200 hover:bg-brand-red/10 hover:text-brand-red font-semibold transition-colors">
+                <i class="fa-solid fa-list-ul ml-2 text-brand-red"></i> الأقسام
+            </a>
+            <a href="#products" onclick="closeMobileMenu()" class="block py-2.5 px-4 rounded-lg text-gray-200 hover:bg-brand-red/10 hover:text-brand-red font-semibold transition-colors">
+                <i class="fa-solid fa-box-open ml-2 text-brand-red"></i> المنتجات
+            </a>
+            <a href="#services" onclick="closeMobileMenu()" class="block py-2.5 px-4 rounded-lg text-gray-200 hover:bg-brand-red/10 hover:text-brand-red font-semibold transition-colors">
+                <i class="fa-solid fa-screwdriver-wrench ml-2 text-brand-red"></i> خدماتنا
+            </a>
+            <a href="#about" onclick="closeMobileMenu()" class="block py-2.5 px-4 rounded-lg text-gray-200 hover:bg-brand-red/10 hover:text-brand-red font-semibold transition-colors">
+                <i class="fa-solid fa-store ml-2 text-brand-red"></i> عن المحل
+            </a>
         </div>
     </header>
 
-    <!-- HERO -->
-    <main id="home">
-        <section class="hero">
-            <div class="hero-content">
-                <div class="badge">صيانة وتجارة الإلكترونيات</div>
-                <h1>TIKTOK <span>MOBILE</span></h1>
-                <p>وجهتك الأولى لصيانة الهواتف واللابتوبات، بيع وشراء أحدث الأجهزة الذكية، وتوفير كافة الإكسسوارات الأصلية بجودة عالية.</p>
-                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-                    <a href="#products" class="btn btn-primary">تصفح المنتجات</a>
-                    <a href="#contact" class="btn btn-dark">تواصل معنا</a>
-                </div>
-            </div>
-        </section>
+    <!-- Hero Section -->
+    <section id="hero" class="relative overflow-hidden py-12 lg:py-20 bg-gradient-to-b from-brand-dark via-brand-card/40 to-brand-dark border-b border-brand-border/50">
+        <!-- Background Neon Elements -->
+        <div class="absolute -top-24 -right-24 w-72 h-72 lg:w-96 lg:h-96 bg-brand-red/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-72 h-72 lg:w-96 lg:h-96 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- SERVICES -->
-        <section id="services">
-            <div class="section-title">
-                <p style="color: var(--accent); font-size: 12px; letter-spacing: 2px;">SERVICES</p>
-                <h2>خدماتنا الاحترافية</h2>
-            </div>
-            <div class="services">
-                <div class="service">
-                    <div class="service-icon">📱</div>
-                    <h3>صيانة الهواتف</h3>
-                    <p>إصلاح الشاشات، استبدال البطاريات، وحل كافة أعطال السوفتوير والهاردوير بدقة.</p>
-                </div>
-                <div class="service">
-                    <div class="service-icon">💻</div>
-                    <h3>صيانة اللابتوبات</h3>
-                    <p>فحص وصيانة أجهزة الكمبيوتر المحمولة، التطهير، وتغيير قطع الغيار التالفة.</p>
-                </div>
-                <div class="service">
-                    <div class="service-icon">🛒</div>
-                    <h3>بيع الأجهزة</h3>
-                    <p>تشكيلة متنوعة ومضمونة من الهواتف الذكية وأجهزة الكمبيوتر الحديثة.</p>
-                </div>
-                <div class="service">
-                    <div class="service-icon">🎧</div>
-                    <h3>الإكسسوارات</h3>
-                    <p>شواحن، سماعات أصلية، كفرات حماية أنيقة، وكيابل سريعة الشحن.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- PRODUCTS -->
-        <section id="products">
-            <div class="section-title">
-                <p style="color: var(--accent); font-size: 12px; letter-spacing: 2px;">CATALOGUE</p>
-                <h2>منتجات المحل</h2>
-                <p>تصفح أقسام المنتجات المتوفرة لدينا</p>
-            </div>
-
-            <div class="products-header-area">
-                <!-- شريط الأقسام للتصفية -->
-                <div class="categories-scroll">
-                    <div class="cat-chip active" onclick="filterCategory('all', this)">الكل</div>
-                    <div class="cat-chip" onclick="filterCategory('الشواحن', this)">🔌 الشواحن</div>
-                    <div class="cat-chip" onclick="filterCategory('السماعات', this)">🎧 السماعات</div>
-                    <div class="cat-chip" onclick="filterCategory('الكفرات', this)">🛡️ الكفرات والحماية</div>
-                    <div class="cat-chip" onclick="filterCategory('الهواتف', this)">📱 الهواتف</div>
-                    <div class="cat-chip" onclick="filterCategory('اللابتوبات', this)">💻 اللابتوبات وأجهزة الكمبيوتر</div>
-                    <div class="cat-chip" onclick="filterCategory('إكسسوارات', this)">⚡ إكسسوارات أخرى</div>
-                </div>
-
-                <!-- زر إضافة منتج (يظهر حصرياً للمالك بعد تسجيل الدخول) -->
-                <button class="btn btn-primary add-product-main-btn admin-only" onclick="openProductModal()">
-                    <span>+</span> إضافة منتج
-                </button>
-            </div>
-
-            <!-- شبكة عرض المنتجات -->
-            <div class="products-grid" id="productsGridContainer">
-                <!-- يتم تعبئتها ديناميكياً -->
-            </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section id="contact">
-            <div class="contact-box">
-                <h2>تواصل معنا مباشرة</h2>
-                <p>هل لديك استفسار عن صيانة جهاز أو توفر منتج معين؟ تواصل معنا عبر الواتساب أو الاتصال الهاتفي.</p>
-                <div class="contact-btns">
-                    <a href="https://wa.me/962700000000" target="_blank" class="btn btn-whatsapp">واتساب المحل</a>
-                    <a href="tel:+962700000000" class="btn btn-primary">اتصال هاتفي</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>© 2026 TIKTOK MOBILE — جميع الحقوق محفوظة</p>
-    </footer>
-
-    <!-- MODAL: LOGIN ADMIN -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3>تسجيل دخول المالك</h3>
-                <button class="close-modal-btn" onclick="closeLoginModal()">×</button>
-            </div>
-            <div class="form-group">
-                <label>اسم المستخدم</label>
-                <input type="text" id="adminUser" placeholder="أدخل اسم المستخدم">
-            </div>
-            <div class="form-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="adminPass" placeholder="أدخل كلمة المرور">
-            </div>
-            <button class="modal-submit-btn" onclick="processLogin()">دخول لوحة التحكم</button>
-        </div>
-    </div>
-
-    <!-- MODAL: ADD PRODUCT -->
-    <div class="modal-overlay" id="productModal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3>إضافة منتج جديد</h3>
-                <button class="close-modal-btn" onclick="closeProductModal()">×</button>
-            </div>
-            <div class="form-group">
-                <label>اسم المنتج</label>
-                <input type="text" id="prodNameInput" placeholder="مثال: شاحن أصلي نوع جبار">
-            </div>
-            <div class="form-group">
-                <label>القسم / التصنيف</label>
-                <select id="prodCatInput">
-                    <option value="الشواحن">الشواحن</option>
-                    <option value="السماعات">السماعات</option>
-                    <option value="الكفرات">الكفرات والحماية</option>
-                    <option value="الهواتف">الهواتف</option>
-                    <option value="اللابتوبات">اللابتوبات وأجهزة الكمبيوتر</option>
-                    <option value="إكسسوارات">إكسسوارات أخرى</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>السعر (بالدينار)</label>
-                <input type="number" id="prodPriceInput" placeholder="مثال: 15">
-            </div>
-            <div class="form-group">
-                <label>الكمية المتوفرة</label>
-                <input type="number" id="prodQtyInput" placeholder="مثال: 10">
-            </div>
-            <div class="form-group">
-                <label>صورة المنتج</label>
-                <input type="file" accept="image/*" id="prodImgFile" onchange="previewProductImg(event)">
-                <div class="img-preview-box" id="imgPreviewContainer">اختر صورة للمنتج</div>
-            </div>
-            <button class="modal-submit-btn" onclick="saveNewProductItem()">حفظ ونشر المنتج</button>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT SYSTEM -->
-    <script>
-        // تخزين المنتجات وحالة تسجيل الدخول
-        let productsList = JSON.parse(localStorage.getItem("tiktokMobile_products")) || [];
-        let isLoggedIn = localStorage.getItem("tiktokMobile_logged") === "true";
-        let currentCategoryFilter = "all";
-        let tempBase64Image = "";
-
-        // تهيئة النظام عند التحميل
-        window.addEventListener("DOMContentLoaded", () => {
-            updateAuthUI();
-            renderProductsUI();
-        });
-
-        // زر الهيدر (تسجيل دخول أو تسجيل خروج)
-        function handleAuthClick() {
-            if (isLoggedIn) {
-                if (confirm("هل تريد تسجيل الخروج من لوحة التحكم؟")) {
-                    isLoggedIn = false;
-                    localStorage.setItem("tiktokMobile_logged", "false");
-                    updateAuthUI();
-                    renderProductsUI();
-                }
-            } else {
-                document.getElementById("loginModal").classList.add("active");
-            }
-        }
-
-        function closeLoginModal() {
-            document.getElementById("loginModal").classList.remove("active");
-        }
-
-        // معالجة تسجيل الدخول
-        function processLogin() {
-            const u = document.getElementById("adminUser").value.trim();
-            const p = document.getElementById("adminPass").value.trim();
-
-            if (u === "admin" && p === "12345") {
-                isLoggedIn = true;
-                localStorage.setItem("tiktokMobile_logged", "true");
-                closeLoginModal();
-                updateAuthUI();
-                renderProductsUI();
-                alert("مرحباً بك يا صاحب المحل! تم تفعيل صلاحيات الإدارة بنجاح.");
-                document.getElementById("adminUser").value = "";
-                document.getElementById("adminPass").value = "";
-            } else {
-                alert("بيانات الدخول غير صحيحة! تأكد من اسم المستخدم وكلمة المرور.");
-            }
-        }
-
-        function updateAuthUI() {
-            const bodyTag = document.getElementById("bodyTag");
-            const authBtn = document.getElementById("authBtnText");
-            if (isLoggedIn) {
-                bodyTag.classList.add("is-logged-in");
-                authBtn.textContent = "خروج (المالك)";
-            } else {
-                bodyTag.classList.remove("is-logged-in");
-                authBtn.textContent = "تسجيل دخول المالك";
-            }
-        }
-
-        // إدارة النوافذ المنبوذة للمنتجات
-        function openProductModal() {
-            document.getElementById("productModal").classList.add("active");
-        }
-
-        function closeProductModal() {
-            document.getElementById("productModal").classList.remove("active");
-            document.getElementById("prodNameInput").value = "";
-            document.getElementById("prodPriceInput").value = "";
-            document.getElementById("prodQtyInput").value = "";
-            document.getElementById("prodImgFile").value = "";
-            document.getElementById("imgPreviewContainer").innerHTML = "اختر صورة للمنتج";
-            tempBase64Image = "";
-        }
-
-        function previewProductImg(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                tempBase64Image = e.target.result;
-                document.getElementById("imgPreviewContainer").innerHTML = `<img src="${tempBase64Image}" alt="Preview">`;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // حفظ منتج جديد
-        function saveNewProductItem() {
-            const name = document.getElementById("prodNameInput").value.trim();
-            const category = document.getElementById("prodCatInput").value;
-            const price = document.getElementById("prodPriceInput").value.trim();
-            const qty = document.getElementById("prodQtyInput").value.trim();
-
-            if (!name || !price || !qty || !tempBase64Image) {
-                alert("الرجاء تعبئة كافة الحقول المطلوبة وإرفاق صورة للمنتج.");
-                return;
-            }
-
-            const newProduct = {
-                id: Date.now(),
-                name: name,
-                category: category,
-                price: price,
-                qty: qty,
-                image: tempBase64Image
-            };
-
-            productsList.push(newProduct);
-            localStorage.setItem("tiktokMobile_products", JSON.stringify(productsList));
-
-            renderProductsUI();
-            closeProductModal();
-        }
-
-        // حذف منتج (للمالك فقط)
-        function deleteProductItem(id) {
-            if (!confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) return;
-            productsList = productsList.filter(item => item.id !== id);
-            localStorage.setItem("tiktokMobile_products", JSON.stringify(productsList));
-            renderProductsUI();
-        }
-
-        // فلترة الأقسام
-        function filterCategory(cat, element) {
-            currentCategoryFilter = cat;
-            document.querySelectorAll(".cat-chip").forEach(chip => chip.classList.remove("active"));
-            element.classList.add("active");
-            renderProductsUI();
-        }
-
-        // عرض المنتجات في الصفحة
-        function renderProductsUI() {
-            const container = document.getElementById("productsGridContainer");
-            
-            let filtered = productsList;
-            if (currentCategoryFilter !== "all") {
-                filtered = productsList.filter(item => item.category === currentCategoryFilter);
-            }
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div style="font-size: 36px; margin-bottom: 10px;">📦</div>
-                        <p>لا توجد منتجات متوفرة في هذا القسم حالياً</p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                
+                <!-- Text Content -->
+                <div class="text-center lg:text-right space-y-5 sm:space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-red/10 border border-brand-red/30 text-brand-red text-xs sm:text-sm font-bold">
+                        <i class="fa-solid fa-bolt text-brand-red"></i>
+                        <span>وجهتك الأولى لإكسسوارات الهواتف</span>
                     </div>
-                `;
-                return;
-            }
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight">
+                        أفضل الأجهزة و <br class="hidden sm:inline"/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-pink-500 to-red-400 glow-text-red">الإكسسوارات الأصلية</span>
+                    </h1>
+                    <p class="text-gray-400 text-sm sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                        تسوق أحدث الشواحن، السماعات، الكفرات، الهواتف الذكية ومستلزمات الكمبيوتر بأفضل الأسعار وأعلى جودة ضمان.
+                    </p>
 
-            container.innerHTML = filtered.map(item => `
-                <div class="product-card">
-                    <!-- زر الحذف يظهر فقط إذا كان مسجلاً لدخول كمالك -->
-                    <button class="delete-btn-admin admin-only" onclick="deleteProductItem(${item.id})" title="حذف المنتج">×</button>
-                    
-                    <div class="product-img-box">
-                        <span class="product-badge-cat">${item.category}</span>
-                        <img class="product-image" src="${item.image}" alt="${escapeHTML(item.name)}">
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
+                        <a href="#products" class="touch-action-btn w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-red to-pink-600 hover:from-brand-darkRed hover:to-pink-700 text-white font-bold text-base shadow-neon-red hover:shadow-neon-red-lg transition-all duration-300">
+                            تصفح المنتجات الان
+                        </a>
+                        <a href="https://wa.me/" target="_blank" id="heroWhatsapp" class="touch-action-btn w-full sm:w-auto px-6 py-3.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 font-bold text-base transition-all duration-300 flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            <span>تواصل عبر الواتساب</span>
+                        </a>
                     </div>
-                    <div class="product-details">
-                        <div class="product-title">${escapeHTML(item.name)}</div>
-                        <div class="product-footer-info">
-                            <div class="product-price">${escapeHTML(item.price)} <span>دينار</span></div>
-                            <div class="product-qty">الكمية: ${escapeHTML(item.qty)}</div>
+                </div>
+
+                <!-- Banner Image / Card -->
+                <div class="relative flex justify-center mt-6 lg:mt-0">
+                    <div class="relative w-full max-w-md lg:max-w-lg aspect-video sm:aspect-[4/3] rounded-2xl overflow-hidden border border-brand-border bg-brand-card shadow-2xl group">
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop" 
+                             alt="TikTok Mobile Electronics" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.src='https://placehold.co/800x600/121216/ff0055?text=TIKTOK+MOBILE'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 right-4 left-4 p-4 rounded-xl bg-brand-dark/80 backdrop-blur-md border border-brand-border/60">
+                            <span class="text-brand-red font-bold text-xs uppercase tracking-wider block">عروض التوفير</span>
+                            <h3 class="text-white font-bold text-base sm:text-lg">خصومات تصل إلى 30% على الشواحن والسماعات</h3>
                         </div>
                     </div>
                 </div>
-            `).join("");
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Search & Categories Bar -->
+    <section id="categories" class="py-8 bg-brand-dark sticky top-20 z-30 border-b border-brand-border/60 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
+            
+            <!-- Search Bar & Add Button Container -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                
+                <!-- Search Input -->
+                <div class="relative w-full sm:max-w-md">
+                    <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="searchInput" oninput="filterProducts()" placeholder="ابحث عن منتج..." class="w-full pr-11 pl-4 py-3 rounded-xl bg-brand-card border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm placeholder-gray-500 transition-colors">
+                </div>
+
+                <!-- Admin Add Product Button (Initially Hidden for visitors) -->
+                <button id="addProductBtn" onclick="openAddProductModal()" class="hidden touch-action-btn w-full sm:w-auto px-5 py-3 rounded-xl bg-brand-red hover:bg-brand-darkRed text-white font-bold text-sm shadow-neon-red transition-all duration-200 items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-base"></i>
+                    <span>إضافة منتج جديد</span>
+                </button>
+            </div>
+
+            <!-- Categories Buttons (Horizontal Scrollable on Mobile) -->
+            <div class="relative">
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 pt-1 touch-pan-x" id="categoryTabs">
+                    <!-- Dynamic categories generated by JS -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-12 flex-grow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
+                        <span class="w-3 h-8 bg-brand-red rounded-full inline-block"></span>
+                        <span id="currentCategoryTitle">جميع المنتجات</span>
+                    </h2>
+                    <p class="text-gray-400 text-xs sm:text-sm mt-1">عرض أحدث المنتجات المتوفرة حالياً بالمتجر</p>
+                </div>
+                <span id="productCount" class="text-xs sm:text-sm font-bold bg-brand-card px-3 py-1.5 rounded-lg border border-brand-border text-brand-red">
+                    0 منتج
+                </span>
+            </div>
+
+            <!-- Products Grid Responsive: 1 column on mobile, 2 on small screens, 3 on md, 4 on lg -->
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                <!-- Products dynamically rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-16 bg-brand-card/30 rounded-2xl border border-dashed border-brand-border my-6">
+                <i class="fa-solid fa-box-open text-5xl text-gray-600 mb-4"></i>
+                <h3 class="text-lg font-bold text-gray-300">لا توجد منتجات مطابقة!</h3>
+                <p class="text-sm text-gray-500 mt-1">جرب البحث بكلمات أخرى أو تغيير الفئة المختارة.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-12 bg-brand-card/40 border-t border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <h2 class="text-2xl sm:text-3xl font-black text-white">خدماتنا المتميزة</h2>
+                <p class="text-gray-400 text-xs sm:text-sm mt-2">نقدم مجموعة واسعة من الخدمات التقنية لضمان رضاكم التام</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <!-- Service 1 -->
+                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-brand-red/50 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-brand-red/10 border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wrench"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">صيانة فورية ومضمونة</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">صيانة شاشات، بطاريات، وأعطال المذر بورد بقطع غيار أصلية ومع كفالة حقيقية.</p>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-brand-red/50 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-brand-red/10 border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">ضمان الحماية والكفالة</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">تركيب أفضل أنواع بكجات الحماية ضد الكسر لشاشات الهواتف مع الضمان.</p>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-brand-red/50 transition-all duration-300 group sm:col-span-2 lg:col-span-1">
+                    <div class="w-12 h-12 rounded-xl bg-brand-red/10 border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">توصيل سريع</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">توصيل لكافة المناطق بأسرع وقت وأمان لضمان وصول طلبك بحالة ممتازة.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-12 bg-brand-dark border-t border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="p-6 sm:p-8 lg:p-10 rounded-3xl bg-gradient-to-r from-brand-card via-brand-card/90 to-brand-card border border-brand-border flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="space-y-4 text-center md:text-right max-w-xl">
+                    <span class="text-brand-red text-xs sm:text-sm font-bold uppercase tracking-wider">عن تيك توك موبايل</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white">خبرة وجودة نثق بها في عالم الهواتف</h2>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                        نحن في متجر TIKTOK MOBILE نسعى دائماً لتقديم أحدث المنتجات التقنية، الشواحن المعتمدة، والسماعات عالية الدقة، مع الحرص على التوفير المستمر وأجود قطع الصيانة.
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <a href="https://wa.me/" target="_blank" class="touch-action-btn px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm text-center shadow-lg transition-all flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>تواصل مباشر معنا</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark border-t border-brand-border/80 py-8 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-4">
+            <div class="flex items-center justify-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-brand-red flex items-center justify-center text-white text-sm">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <span class="text-base font-bold text-white">TIKTOK MOBILE</span>
+            </div>
+            <p>© 2026 جميع الحقوق محفوظة لـ متجر TIKTOK MOBILE.</p>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm p-4 overflow-y-auto flex items-center justify-center">
+        <div class="relative w-full max-w-md bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
+            <!-- Close Button -->
+            <button onclick="toggleAdminModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-brand-border/50 text-gray-400 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-14 h-14 bg-brand-red/10 border border-brand-red/30 rounded-2xl flex items-center justify-center text-brand-red mx-auto text-2xl mb-3">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">تسجيل دخول مدير المحل</h3>
+                <p class="text-xs text-gray-400 mt-1">أدخل بيانات المسؤول للتحكم بالمنتجات</p>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">اسم المستخدم</label>
+                    <input type="text" id="adminUsername" required placeholder="ادخل اسم المستخدم (admin)" class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">كلمة المرور</label>
+                    <input type="password" id="adminPassword" required placeholder="ادخل كلمة المرور (12345)" class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                </div>
+
+                <div id="loginError" class="hidden text-xs text-brand-red bg-brand-red/10 border border-brand-red/30 p-2.5 rounded-lg text-center font-semibold">
+                    اسم المستخدم أو كلمة المرور غير صحيحة!
+                </div>
+
+                <button type="submit" class="touch-action-btn w-full py-3.5 rounded-xl bg-brand-red hover:bg-brand-darkRed text-white font-bold text-sm shadow-neon-red transition-all">
+                    تسجيل الدخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm p-4 overflow-y-auto flex items-center justify-center">
+        <div class="relative w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
+            <!-- Close Button -->
+            <button onclick="closeAddProductModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-brand-border/50 text-gray-400 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-bold text-white">إضافة منتج جديد</h3>
+                <p class="text-xs text-gray-400 mt-1">قم بتعبئة حقول المنتج لتظهر فوراً بالمتجر</p>
+            </div>
+
+            <form onsubmit="handleAddProduct(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">اسم المنتج</label>
+                    <input type="text" id="prodTitle" required placeholder="مثال: شاحن سريع 20 واط" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-300 mb-1">السعر (د.أ / $)</label>
+                        <input type="number" step="0.01" id="prodPrice" required placeholder="15" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-300 mb-1">الكمية المتاحة</label>
+                        <input type="number" id="prodQuantity" required placeholder="10" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">فئة المنتج</label>
+                    <select id="prodCategory" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                        <option value="شواحن">شواحن</option>
+                        <option value="سماعات">سماعات</option>
+                        <option value="كفرات">كفرات</option>
+                        <option value="هواتف">هواتف</option>
+                        <option value="كمبيوتر">كمبيوتر</option>
+                        <option value="إكسسوارات">إكسسوارات</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">رابط صورة المنتج (URL)</label>
+                    <input type="url" id="prodImage" required placeholder="https://images.unsplash.com/..." class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                    <p class="text-[10px] text-gray-500 mt-1">يمكنك استخدام روابط Unsplash أو روابط صور مباشرة</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">وصف قصير (اختياري)</label>
+                    <textarea id="prodDesc" rows="2" placeholder="تفاصيل المنتج أو نوع الضمان..." class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm"></textarea>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit" class="touch-action-btn flex-1 py-3 rounded-xl bg-brand-red hover:bg-brand-darkRed text-white font-bold text-sm shadow-neon-red transition-all">
+                        حفظ ونشر المنتج
+                    </button>
+                    <button type="button" onclick="closeAddProductModal()" class="touch-action-btn px-5 py-3 rounded-xl bg-brand-border hover:bg-gray-700 text-gray-300 font-bold text-sm">
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 left-5 z-50 hidden bg-brand-card border border-brand-red text-white px-5 py-3 rounded-xl shadow-neon-red flex items-center gap-3 transition-all">
+        <i class="fa-solid fa-circle-check text-brand-red text-lg"></i>
+        <span id="toastMsg" class="text-xs sm:text-sm font-bold">تمت العملية بنجاح!</span>
+    </div>
+
+    <script>
+        // Categories list
+        const categories = ["الكل", "شواحن", "سماعات", "كفرات", "هواتف", "كمبيوتر", "إكسسوارات"];
+        let activeCategory = "الكل";
+
+        // Initial Sample Products
+        const initialProducts = [
+            {
+                id: 1,
+                title: "شاحن سريع Anker 20W Type-C",
+                price: 18,
+                quantity: 15,
+                category: "شواحن",
+                image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?q=80&w=500&auto=format&fit=crop",
+                desc: "يدعم الشحن السريع لجميع هواتف الآيفون والأندرويد مع أمان عالي."
+            },
+            {
+                id: 2,
+                title: "سماعات بلوتوث AirPods Pro 2",
+                price: 85,
+                quantity: 8,
+                category: "سماعات",
+                image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?q=80&w=500&auto=format&fit=crop",
+                desc: "عزل ضوضاء فعال صوت محيطي نقاوة عالية بطارية تدوم طويلاً."
+            },
+            {
+                id: 3,
+                title: "كفر حماية شفاط مع حماية الكاميرا",
+                price: 7,
+                quantity: 25,
+                category: "كفرات",
+                image: "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?q=80&w=500&auto=format&fit=crop",
+                desc: "حماية فائقة من الصدمات ومقاوم للفيضانات ومريح باليد."
+            },
+            {
+                id: 4,
+                title: "ساعة ذكية Smart Watch Ultra",
+                price: 45,
+                quantity: 12,
+                category: "إكسسوارات",
+                image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=500&auto=format&fit=crop",
+                desc: "متابعة نبضات القلب، رياضية بالكامل، شاشة HD مقاومة للماء."
+            },
+            {
+                id: 5,
+                title: "ماوس وكيبورد جيمنج RGB للكمبيوتر",
+                price: 30,
+                quantity: 5,
+                category: "كمبيوتر",
+                image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=500&auto=format&fit=crop",
+                desc: "إضاءة RGB ممتازة، استجابة سريعة ومريحة للألعاب الطويلة."
+            },
+            {
+                id: 6,
+                title: "هاتف iPhone 15 Pro Max 256GB",
+                price: 1150,
+                quantity: 3,
+                category: "هواتف",
+                image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?q=80&w=500&auto=format&fit=crop",
+                desc: "جديد بالتغليف الأصلي مع كفالة سنة كاملة رسمية."
+            }
+        ];
+
+        // State Management
+        let products = JSON.parse(localStorage.getItem('tiktok_products')) || initialProducts;
+        let isAdminLoggedIn = JSON.parse(localStorage.getItem('tiktok_admin_login')) || false;
+
+        // Init App on Window Load
+        window.onload = function() {
+            renderCategories();
+            renderProducts();
+            updateAdminUI();
+        };
+
+        // Render Category Tabs (Horizontal Scroll supported)
+        function renderCategories() {
+            const tabsContainer = document.getElementById('categoryTabs');
+            tabsContainer.innerHTML = categories.map(cat => `
+                <button onclick="setCategory('${cat}')" 
+                        class="px-5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 border ${
+                            activeCategory === cat 
+                            ? 'bg-brand-red text-white border-brand-red shadow-neon-red' 
+                            : 'bg-brand-card text-gray-300 border-brand-border hover:border-gray-600'
+                        }">
+                    ${cat}
+                </button>
+            `).join('');
         }
 
-        // حماية النصوص من هجمات XSS البسيطة
-        function escapeHTML(text) {
-            const div = document.createElement("div");
-            div.textContent = text;
-            return div.innerHTML;
+        // Set Active Category
+        function setCategory(category) {
+            activeCategory = category;
+            document.getElementById('currentCategoryTitle').innerText = category === "الكل" ? "جميع المنتجات" : `قسم ${category}`;
+            renderCategories();
+            filterProducts();
+        }
+
+        // Render Products Grid
+        function renderProducts(itemsToRender = null) {
+            const grid = document.getElementById('productsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const countLabel = document.getElementById('productCount');
+            
+            const list = itemsToRender || getFilteredProducts();
+
+            countLabel.innerText = `${list.length} منتج`;
+
+            if (list.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = list.map(item => `
+                <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden hover:border-brand-red/60 transition-all duration-300 flex flex-col justify-between group shadow-lg">
+                    <div>
+                        <!-- Product Image -->
+                        <div class="relative w-full aspect-[4/3] bg-brand-dark overflow-hidden">
+                            <img src="${item.image}" 
+                                 alt="${item.title}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='https://placehold.co/600x400/121216/ff0055?text=${encodeURIComponent(item.title)}'">
+                            <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-brand-dark/80 backdrop-blur-md border border-brand-border text-[11px] font-bold text-brand-red">
+                                ${item.category}
+                            </span>
+                            ${isAdminLoggedIn ? `
+                                <button onclick="deleteProduct(${item.id})" class="absolute top-3 left-3 w-8 h-8 rounded-lg bg-red-600/90 text-white flex items-center justify-center hover:bg-red-700 transition-colors shadow-md">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+
+                        <!-- Product Content -->
+                        <div class="p-4 sm:p-5 space-y-2.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white line-clamp-1 group-hover:text-brand-red transition-colors">${item.title}</h3>
+                            <p class="text-gray-400 text-xs line-clamp-2 leading-relaxed">${item.desc || 'لا يوجد وصف محدد للمنتج حالياً.'}</p>
+                            
+                            <div class="flex items-center justify-between pt-2 border-t border-brand-border/50">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">السعر</span>
+                                    <span class="text-lg sm:text-xl font-black text-brand-red">${item.price} <span class="text-xs font-semibold">د.أ</span></span>
+                                </div>
+                                <div class="text-left">
+                                    <span class="text-xs text-gray-400 block">الكمية</span>
+                                    <span class="text-xs font-bold text-gray-200 bg-brand-dark px-2.5 py-1 rounded-md border border-brand-border inline-block">${item.quantity} متوفر</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buy / Contact Button -->
+                    <div class="p-4 sm:p-5 pt-0">
+                        <a href="https://wa.me/?text=${encodeURIComponent('مرحبا، أرغب بشراء المنتج: ' + item.title + ' بسعر ' + item.price + ' د.أ')}" 
+                           target="_blank" 
+                           class="touch-action-btn w-full py-2.5 rounded-xl bg-brand-red/10 hover:bg-brand-red text-brand-red hover:text-white border border-brand-red/30 font-bold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-base"></i>
+                            <span>طلب عبر الواتساب</span>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Products Search & Category
+        function getFilteredProducts() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            return products.filter(p => {
+                const matchesCategory = activeCategory === "الكل" || p.category === activeCategory;
+                const matchesSearch = p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
+                return matchesCategory && matchesSearch;
+            });
+        }
+
+        function filterProducts() {
+            renderProducts(getFilteredProducts());
+        }
+
+        // Admin Functionality
+        function toggleAdminModal() {
+            if (isAdminLoggedIn) {
+                // Logout Admin
+                isAdminLoggedIn = false;
+                localStorage.setItem('tiktok_admin_login', JSON.stringify(false));
+                updateAdminUI();
+                showToast("تم تسجيل الخروج من وضع المدير");
+            } else {
+                // Open Login Modal
+                document.getElementById('adminModal').classList.remove('hidden');
+                document.getElementById('loginError').classList.add('hidden');
+            }
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('adminUsername').value.trim();
+            const pass = document.getElementById('adminPassword').value.trim();
+
+            if (user === "admin" && pass === "12345") {
+                isAdminLoggedIn = true;
+                localStorage.setItem('tiktok_admin_login', JSON.stringify(true));
+                document.getElementById('adminModal').classList.add('hidden');
+                document.getElementById('adminUsername').value = '';
+                document.getElementById('adminPassword').value = '';
+                updateAdminUI();
+                showToast("أهلاً بك! تم دخول وضع الأدمن بنجاح");
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        function updateAdminUI() {
+            const adminBtnText = document.getElementById('adminBtnText');
+            const adminIcon = document.getElementById('adminIcon');
+            const addProductBtn = document.getElementById('addProductBtn');
+
+            if (isAdminLoggedIn) {
+                adminBtnText.innerText = "خروج الأدمن";
+                adminIcon.className = "fa-solid fa-right-from-bracket text-brand-red";
+                addProductBtn.classList.remove('hidden');
+                addProductBtn.classList.add('flex');
+            } else {
+                adminBtnText.innerText = "دخول الأدمن";
+                adminIcon.className = "fa-solid fa-user-shield text-brand-red";
+                addProductBtn.classList.add('hidden');
+                addProductBtn.classList.remove('flex');
+            }
+
+            renderProducts();
+        }
+
+        // Add Product Handlers
+        function openAddProductModal() {
+            document.getElementById('addProductModal').classList.remove('hidden');
+        }
+
+        function closeAddProductModal() {
+            document.getElementById('addProductModal').classList.add('hidden');
+        }
+
+        function handleAddProduct(e) {
+            e.preventDefault();
+
+            const newProd = {
+                id: Date.now(),
+                title: document.getElementById('prodTitle').value.trim(),
+                price: parseFloat(document.getElementById('prodPrice').value),
+                quantity: parseInt(document.getElementById('prodQuantity').value),
+                category: document.getElementById('prodCategory').value,
+                image: document.getElementById('prodImage').value.trim(),
+                desc: document.getElementById('prodDesc').value.trim()
+            };
+
+            products.unshift(newProd);
+            localStorage.setItem('tiktok_products', JSON.stringify(products));
+
+            closeAddProductModal();
+            e.target.reset();
+            renderProducts();
+            showToast("تمت إضافة المنتج الجديد بنجاح!");
+        }
+
+        // Delete Product
+        function deleteProduct(id) {
+            if (confirm("هل أنت أصلًا متاكد من حذف هذا المنتج؟")) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('tiktok_products', JSON.stringify(products));
+                renderProducts();
+                showToast("تم حذف المنتج بنجاح!");
+            }
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            menu.classList.toggle('hidden');
+
+            if (menu.classList.contains('hidden')) {
+                icon.className = "fa-solid fa-bars text-xl";
+            } else {
+                icon.className = "fa-solid fa-xmark text-xl";
+            }
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.add('hidden');
+            document.getElementById('menuIcon').className = "fa-solid fa-bars text-xl";
+        }
+
+        // Toast Helper Notification
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
         }
     </script>
 </body>
