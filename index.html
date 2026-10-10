@@ -334,11 +334,11 @@
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-300 mb-1">اسم المستخدم</label>
-                    <input type="text" id="adminUsername" required placeholder="" class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                    <input type="text" id="adminUsername" required class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-300 mb-1">كلمة المرور</label>
-                    <input type="password" id="adminPassword" required placeholder="" class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                    <input type="password" id="adminPassword" required class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
                 </div>
                 <div id="loginError" class="hidden text-xs text-brand-red bg-brand-red/10 border border-brand-red/30 p-2.5 rounded-lg text-center font-semibold">
                     اسم المستخدم (admin) أو كلمة المرور غير صحيحة!
@@ -358,7 +358,7 @@
             </button>
             <div class="text-center mb-6">
                 <h3 class="text-xl font-bold text-white">إضافة منتج جديد</h3>
-                <p class="text-xs text-gray-400 mt-1">التقاط صورة بالكاميرا أو اختيار صورة من الجهاز لتظهر فوراً</p>
+                <p class="text-xs text-gray-400 mt-1">التقط صورة بالكاميرا أو اختر رابط صورة أو ملف من الهاتف</p>
             </div>
             <form onsubmit="handleAddProduct(event)" class="space-y-4">
                 <div>
@@ -387,9 +387,12 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1">صورة المنتج (التقاط بالكاميرا أو اختيار ملف)</label>
-                    <input type="file" id="prodImageFile" accept="image/*" capture="environment" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-red file:text-white hover:file:bg-brand-darkRed cursor-pointer">
-                    <p class="text-[11px] text-gray-400 mt-1">عند الضغط، سيتم فتح كاميرا الجوال مباشرة (أو المعرض لاختيار صورة).</p>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">صورة المنتج (الكاميرا أو الاستوديو)</label>
+                    <input type="file" id="prodImageFile" accept="image/*" capture="environment" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-red file:text-white hover:file:bg-brand-darkRed cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">أو رابط صورة جاهز (URL)</label>
+                    <input type="url" id="prodImageUrl" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-300 mb-1">وصف قصير (اختياري)</label>
@@ -484,7 +487,9 @@
                     body: JSON.stringify({ products })
                 });
                 if (!res.ok) {
-                    throw new Error('Failed to save to GitHub');
+                    const errTxt = await res.text();
+                    console.error("Cloud Save Fail:", errTxt);
+                    throw new Error('Failed to save to GitHub: ' + errTxt);
                 }
             } catch (err) {
                 console.error("Error saving products:", err);
@@ -635,12 +640,30 @@
             document.getElementById('addProductModal').classList.add('hidden');
         }
 
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
+        // دالة ضغط وتصغير الصور لحجم خفيف جداً
+        function compressAndConvertImage(file) {
+            return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 600;
+                        const scaleSize = MAX_WIDTH / img.width;
+                        
+                        canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+                        canvas.height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        // ضغط جودة الصورة إلى 0.6 لتكون خفيفة وسريعة التخزين
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                        resolve(dataUrl);
+                    };
+                };
             });
         }
 
@@ -648,21 +671,32 @@
             event.preventDefault();
             if (!isAdminLoggedIn) return;
 
+            const saveBtn = document.getElementById('saveProductBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerText = "جاري الحفظ والرفع...";
+
             const title = document.getElementById('prodTitle').value;
             const price = parseFloat(document.getElementById('prodPrice').value);
             const quantity = parseInt(document.getElementById('prodQuantity').value);
             const category = document.getElementById('prodCategory').value;
             const desc = document.getElementById('prodDesc').value;
             const imageFileinput = document.getElementById('prodImageFile');
+            const imageUrlInput = document.getElementById('prodImageUrl').value;
 
-            let imageUrl = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=500&auto=format&fit=crop";
+            let imageUrl = imageUrlInput.trim();
 
-            if (imageFileinput.files && imageFileinput.files[0]) {
-                try {
-                    imageUrl = await fileToBase64(imageFileinput.files[0]);
-                } catch (e) {
-                    console.error("Error reading image file:", e);
+            if (!imageUrl) {
+                if (imageFileinput.files && imageFileinput.files[0]) {
+                    try {
+                        imageUrl = await compressAndConvertImage(imageFileinput.files[0]);
+                    } catch (e) {
+                        console.error("Error compressing image:", e);
+                    }
                 }
+            }
+
+            if (!imageUrl) {
+                imageUrl = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=500&auto=format&fit=crop";
             }
 
             const newProduct = {
@@ -679,7 +713,11 @@
             await saveProductsToCloud();
             renderProducts();
             closeAddProductModal();
-            showToast('تمت إضافة المنتج وحفظه على السحاب!');
+            
+            saveBtn.disabled = false;
+            saveBtn.innerText = "حفظ ونشر المنتج للسحاب";
+
+            showToast('تمت إضافة المنتج وحفظه بنجاح!');
             event.target.reset();
         }
 
