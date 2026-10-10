@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "شاحن سريع Anker 20W Type-C",
+    "price": 18,
+    "quantity": 15,
+    "category": "شواحن",
+    "image": "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?q=80&w=500&auto=format&fit=crop",
+    "desc": "يدعم الشحن السريع لجميع هواتف الآيفون والأندرويد مع أمان عالي."
+  },
+  {
+    "id": 2,
+    "title": "سماعات بلوتوث AirPods Pro 2",
+    "price": 85,
+    "quantity": 8,
+    "category": "سماعات",
+    "image": "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?q=80&w=500&auto=format&fit=crop",
+    "desc": "عزل ضوضاء فعال صوت محيطي نقاوة عالية بطارية تدوم طويلاً."
+  },
+  {
+    "id": 3,
+    "title": "كفر حماية شفاف مع حماية الكاميرا",
+    "price": 7,
+    "quantity": 25,
+    "category": "كفرات",
+    "image": "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?q=80&w=500&auto=format&fit=crop",
+    "desc": "حماية فائقة من الصدمات ومقاوم للخدوش ومريح باليد."
+  }
+]
