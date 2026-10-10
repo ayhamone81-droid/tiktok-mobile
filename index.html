@@ -121,6 +121,11 @@
 
                 <!-- Header Actions -->
                 <div class="flex items-center gap-2 sm:gap-3">
+                    <button id="tokenSettingsBtn" onclick="toggleTokenModal()" class="hidden touch-action-btn px-3 py-2 rounded-xl border border-brand-border hover:border-brand-cyan bg-brand-card text-xs font-bold text-gray-300 items-center gap-1.5" title="إعدادات التوكن">
+                        <i class="fa-solid fa-key text-brand-cyan"></i>
+                        <span class="hidden sm:inline">ربط GitHub</span>
+                    </button>
+
                     <button id="adminBtn" onclick="toggleAdminModal()" class="touch-action-btn px-3 sm:px-4 py-2 rounded-xl border border-brand-border hover:border-brand-red bg-brand-card hover:bg-brand-red/10 text-xs sm:text-sm font-bold text-gray-200 transition-all duration-200 flex items-center gap-2">
                         <i class="fa-solid fa-user-shield text-brand-red" id="adminIcon"></i>
                         <span id="adminBtnText">دخول الأدمن</span>
@@ -353,15 +358,38 @@
         </div>
     </div>
 
-    <!-- Add Product Modal (Generates JSON text to update products.txt) -->
+    <!-- GitHub Token Settings Modal -->
+    <div id="tokenModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm p-4 overflow-y-auto flex items-center justify-center">
+        <div class="relative w-full max-w-md bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 shadow-2xl my-auto space-y-4">
+            <button onclick="toggleTokenModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-brand-border/50 text-gray-400 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-brand-cyan/10 border border-brand-cyan/30 rounded-xl flex items-center justify-center text-brand-cyan mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">إعداد ربط GitHub</h3>
+                <p class="text-xs text-gray-400 mt-1">أدخل GITHUB_TOKEN لرفع الصور وتحديث الملف تلقائياً من المتصفح</p>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-300 mb-1">GitHub Personal Access Token</label>
+                <input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-cyan focus:outline-none text-white text-sm">
+            </div>
+            <button onclick="saveGitHubToken()" class="touch-action-btn w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm transition-all">
+                حفظ التوكن في المتصفح
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
     <div id="addProductModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm p-4 overflow-y-auto flex items-center justify-center">
         <div class="relative w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
             <button onclick="closeAddProductModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-brand-border/50 text-gray-400 hover:text-white flex items-center justify-center">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div class="text-center mb-6">
-                <h3 class="text-xl font-bold text-white">إضافة منتج جديد</h3>
-                <p class="text-xs text-gray-400 mt-1">أدخل بيانات المنتج لتوليد الكود وإضافته للملف</p>
+                <h3 class="text-xl font-bold text-white">إضافة منتج جديد عبر الكاميرا</h3>
+                <p class="text-xs text-gray-400 mt-1">التقط صورة وسيقوم الموقع برفعها وإنشاء الرابط على غيت هب تلقائياً</p>
             </div>
             <form onsubmit="handleAddProduct(event)" class="space-y-4">
                 <div>
@@ -390,39 +418,26 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1">رابط صورة المنتج (URL)</label>
-                    <input type="url" id="prodImage" required placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                    <label class="block text-xs font-bold text-gray-300 mb-1">صورة المنتج (التقاط بالكاميرا أو المعرض)</label>
+                    <input type="file" id="prodImageFile" accept="image/*" capture="environment" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-red file:text-white hover:file:bg-brand-darkRed cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">أو رابط صورة جاهز (URL) - اختياري</label>
+                    <input type="url" id="prodImageUrl" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-300 mb-1">وصف قصير (اختياري)</label>
                     <textarea id="prodDesc" rows="2" placeholder="تفاصيل المنتج أو نوع الضمان..." class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm"></textarea>
                 </div>
                 <div class="flex items-center gap-3 pt-2">
-                    <button type="submit" class="touch-action-btn flex-1 py-3 rounded-xl bg-brand-red hover:bg-brand-darkRed text-white font-bold text-sm shadow-neon-red transition-all">
-                        توليد بيانات المنتج
+                    <button type="submit" id="saveProductBtn" class="touch-action-btn flex-1 py-3 rounded-xl bg-brand-red hover:bg-brand-darkRed text-white font-bold text-sm shadow-neon-red transition-all">
+                        رفع الصورة وحفظ المنتج بالسحاب
                     </button>
                     <button type="button" onclick="closeAddProductModal()" class="touch-action-btn px-5 py-3 rounded-xl bg-brand-border hover:bg-gray-700 text-gray-300 font-bold text-sm">
                         إلغاء
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- Export / Result Modal for Admin -->
-    <div id="exportModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm p-4 overflow-y-auto flex items-center justify-center">
-        <div class="relative w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 shadow-2xl my-auto space-y-4">
-            <h3 class="text-xl font-bold text-white text-center">تم توليد كود المنتجات بنجاح!</h3>
-            <p class="text-xs text-gray-400 text-center">انسخ النص أدناه والصقه بالكامل داخل ملف <code class="text-brand-red">products.txt</code> على غيت هب:</p>
-            <textarea id="exportTextarea" rows="8" readonly class="w-full p-3 rounded-xl bg-brand-dark border border-brand-border text-green-400 text-xs font-mono select-all focus:outline-none"></textarea>
-            <div class="flex gap-3">
-                <button onclick="copyExportText()" class="touch-action-btn flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-all">
-                    نسخ الكود
-                </button>
-                <button onclick="closeExportModal()" class="touch-action-btn px-5 py-3 rounded-xl bg-brand-border hover:bg-gray-700 text-gray-300 font-bold text-sm">
-                    إغلاق
-                </button>
-            </div>
         </div>
     </div>
 
@@ -433,6 +448,11 @@
     </div>
 
     <script>
+        // إعدادات مستودع غيت هب الخاص بك
+        const GITHUB_OWNER = 'ayhamone81-droid';
+        const GITHUB_REPO = 'tiktok-mobile';
+        const GITHUB_BRANCH = 'main';
+
         const categories = ["الكل", "شواحن", "سماعات", "كفرات", "هواتف", "كمبيوتر", "إكسسوارات"];
         let activeCategory = "الكل";
         let products = [];
@@ -442,9 +462,14 @@
             renderCategories();
             await fetchProductsFromFile();
             updateAdminUI();
+            
+            // تعيين التوكن المخزن إن وجد
+            const savedToken = localStorage.getItem('github_api_token');
+            if (savedToken) {
+                document.getElementById('githubTokenInput').value = savedToken;
+            }
         };
 
-        // قراءة المنتجات مباشرة من ملف products.txt بجانب index.html
         async function fetchProductsFromFile() {
             try {
                 const res = await fetch('products.txt?t=' + Date.now());
@@ -459,6 +484,77 @@
                 products = [];
             }
             renderProducts();
+        }
+
+        // دالة لتحديث ملفات المستودع مباشرة من متصفح الأدمن عبر GitHub API
+        async function updateGitHubFile(filePath, fileContent, commitMessage) {
+            const token = localStorage.getItem('github_api_token');
+            if (!token) {
+                alert('الرجاء إدخال GitHub Token أولاً من زر (ربط GitHub) بالأعلى!');
+                toggleTokenModal();
+                throw new Error('Missing GitHub Token');
+            }
+
+            const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`;
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json'
+            };
+
+            // 1. جلب SHA الحالي للملف (مطلوب للتعديل في غيت هب)
+            let sha = null;
+            const getRes = await fetch(apiUrl, { headers });
+            if (getRes.ok) {
+                const fileData = await getRes.json();
+                sha = fileData.sha;
+            }
+
+            // 2. إرسال محتوى الملف الجديد
+            const bodyData = {
+                message: commitMessage,
+                content: btoa(unescape(encodeURIComponent(fileContent))), // ترميز آمن للغة العربية
+                branch: GITHUB_BRANCH
+            };
+            if (sha) bodyData.sha = sha;
+
+            const putRes = await fetch(apiUrl, {
+                method: 'PUT',
+                headers,
+                body: JSON.stringify(bodyData)
+            });
+
+            if (!putRes.ok) {
+                const errText = await putRes.text();
+                throw new Error('GitHub API Error: ' + errText);
+            }
+
+            return await putRes.json();
+        }
+
+        // ضغط الصورة قبل رفعها لغيت هب لتكون خفيفة وسريعة
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 600;
+                        const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+                        canvas.height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        // استخراج Base64 بصيغة JPEG بجودة 0.6
+                        const base64String = canvas.toDataURL('image/jpeg', 0.6).split(',')[1];
+                        resolve(base64String);
+                    };
+                };
+            });
         }
 
         function renderCategories() {
@@ -533,7 +629,7 @@
                                 <span>طلب عبر الواتساب</span>
                             </a>
                             ${isAdminLoggedIn ? `
-                                <button onclick="deleteProductLocal(${p.id})" class="touch-action-btn px-3 py-2.5 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40 transition-all" title="حذف وتحديث الملف">
+                                <button onclick="deleteProduct(${p.id})" class="touch-action-btn px-3 py-2.5 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40 transition-all" title="حذف المنتج">
                                     <i class="fa-solid fa-trash-can text-sm"></i>
                                 </button>
                             ` : ''}
@@ -545,6 +641,21 @@
 
         function toggleAdminModal() {
             document.getElementById('adminModal').classList.toggle('hidden');
+        }
+
+        function toggleTokenModal() {
+            document.getElementById('tokenModal').classList.toggle('hidden');
+        }
+
+        function saveGitHubToken() {
+            const token = document.getElementById('githubTokenInput').value.trim();
+            if (!token) {
+                alert('الرجاء إدخال توكن صحيح!');
+                return;
+            }
+            localStorage.setItem('github_api_token', token);
+            toggleTokenModal();
+            showToast('تم حفظ توكن GitHub بنجاح!');
         }
 
         function handleAdminLogin(event) {
@@ -569,6 +680,7 @@
             const btnText = document.getElementById('adminBtnText');
             const adminIcon = document.getElementById('adminIcon');
             const addBtn = document.getElementById('addProductBtn');
+            const tokenSettingsBtn = document.getElementById('tokenSettingsBtn');
 
             if (isAdminLoggedIn) {
                 btnText.innerText = 'خروج الأدمن';
@@ -576,12 +688,16 @@
                 document.getElementById('adminBtn').onclick = logoutAdmin;
                 addBtn.classList.remove('hidden');
                 addBtn.classList.add('flex');
+                tokenSettingsBtn.classList.remove('hidden');
+                tokenSettingsBtn.classList.add('flex');
             } else {
                 btnText.innerText = 'دخول الأدمن';
                 adminIcon.className = 'fa-solid fa-user-shield text-brand-red';
                 document.getElementById('adminBtn').onclick = toggleAdminModal;
                 addBtn.classList.add('hidden');
                 addBtn.classList.remove('flex');
+                tokenSettingsBtn.classList.add('hidden');
+                tokenSettingsBtn.classList.remove('flex');
             }
         }
 
@@ -590,7 +706,7 @@
             localStorage.setItem('tiktok_admin_login', JSON.stringify(false));
             updateAdminUI();
             renderProducts();
-            showToast('تم تسجيل الخروج بنجاح');
+            showToast('تم تسجيل الخروج');
         }
 
         function openAddProductModal() {
@@ -601,46 +717,87 @@
             document.getElementById('addProductModal').classList.add('hidden');
         }
 
-        function closeExportModal() {
-            document.getElementById('exportModal').classList.add('hidden');
-        }
-
-        function copyExportText() {
-            const txt = document.getElementById('exportTextarea');
-            txt.select();
-            navigator.clipboard.writeText(txt.value);
-            showToast('تم نسخ الكود بنجاح!');
-        }
-
-        function handleAddProduct(event) {
+        // إضافة المنتج ورفع الصورة وتحديث ملف products.txt أوتوماتيكياً على غيت هب
+        async function handleAddProduct(event) {
             event.preventDefault();
             if (!isAdminLoggedIn) return;
 
-            const newProd = {
-                id: Date.now(),
-                title: document.getElementById('prodTitle').value,
-                price: parseFloat(document.getElementById('prodPrice').value),
-                quantity: parseInt(document.getElementById('prodQuantity').value),
-                category: document.getElementById('prodCategory').value,
-                image: document.getElementById('prodImage').value,
-                desc: document.getElementById('prodDesc').value
-            };
+            const saveBtn = document.getElementById('saveProductBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerText = "جاري رفع الصورة وتحديث السحاب...";
 
-            products.unshift(newProd);
-            
-            // إظهار نافذة التصدير ليقوم الأدمن بنسخ الكود الجديد ولصقه في ملف products.txt
-            document.getElementById('exportTextarea').value = JSON.stringify(products, null, 2);
-            closeAddProductModal();
-            document.getElementById('exportModal').classList.remove('hidden');
-            event.target.reset();
+            try {
+                const title = document.getElementById('prodTitle').value;
+                const price = parseFloat(document.getElementById('prodPrice').value);
+                const quantity = parseInt(document.getElementById('prodQuantity').value);
+                const category = document.getElementById('prodCategory').value;
+                const desc = document.getElementById('prodDesc').value;
+                const imageFileinput = document.getElementById('prodImageFile');
+                const imageUrlInput = document.getElementById('prodImageUrl').value.trim();
+
+                let imageUrl = imageUrlInput;
+
+                // إذا قام بالتقاط صورة بالكاميرا أو اختيار ملف
+                if (!imageUrl && imageFileinput.files && imageFileinput.files[0]) {
+                    const base64Image = await compressImage(imageFileinput.files[0]);
+                    const fileName = `images/prod_${Date.now()}.jpg`;
+                    
+                    // رفع الصورة كملف حقيقي إلى المستودع
+                    await updateGitHubFile(fileName, base64Image, 'Upload product image via admin panel');
+                    
+                    // الحصول على الرابط المباشر للصورة من غيت هب
+                    imageUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${fileName}`;
+                }
+
+                if (!imageUrl) {
+                    imageUrl = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=500&auto=format&fit=crop";
+                }
+
+                const newProduct = {
+                    id: Date.now(),
+                    title,
+                    price,
+                    quantity,
+                    category,
+                    image: imageUrl,
+                    desc
+                };
+
+                products.unshift(newProduct);
+
+                // تحديث ملف products.txt على غيت هب مباشرة
+                const jsonString = JSON.stringify(products, null, 2);
+                await updateGitHubFile('products.txt', jsonString, 'Add new product via admin panel');
+
+                renderProducts();
+                closeAddProductModal();
+                showToast('تمت الإضافة ورفع الصورة وتحديث السحاب بنجاح!');
+                event.target.reset();
+
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ أثناء الاتصال بـ GitHub: ' + err.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = "رفع الصورة وحفظ المنتج بالسحاب";
+            }
         }
 
-        function deleteProductLocal(id) {
+        async function deleteProduct(id) {
             if (!isAdminLoggedIn) return;
             if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
-                products = products.filter(p => p.id !== id);
-                document.getElementById('exportTextarea').value = JSON.stringify(products, null, 2);
-                document.getElementById('exportModal').classList.remove('hidden');
+                try {
+                    products = products.filter(p => p.id !== id);
+                    const jsonString = JSON.stringify(products, null, 2);
+                    
+                    // تحديث ملف products.txt على غيت هب مباشرة بعد الحذف
+                    await updateGitHubFile('products.txt', jsonString, 'Delete product via admin panel');
+                    
+                    renderProducts();
+                    showToast('تم حذف المنتج وتحديث السحاب بنجاح!');
+                } catch (err) {
+                    alert('حدث خطأ أثناء الحذف: ' + err.message);
+                }
             }
         }
 
