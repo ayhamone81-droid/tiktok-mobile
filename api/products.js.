@@ -6,28 +6,25 @@ const BRANCH = 'main';
 exports.handler = async function(event, context) {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
-        console.error("ERROR: GITHUB_TOKEN is missing in Netlify environment variables!");
-        return { statusCode: 500, body: JSON.stringify({ error: 'GitHub token not configured in Netlify' }) };
+        return { statusCode: 500, body: JSON.stringify({ error: 'GITHUB_TOKEN is missing' }) };
     }
 
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`;
     const headers = {
         'Authorization': `Bearer ${token}`,
         'Accept': 'application/vnd.github+json',
-        'User-Agent': 'Netlify-Function'
+        'User-Agent': 'Vercel-Function',
+        'Content-Type': 'application/json'
     };
 
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`;
+
+    // --- GET PRODUCTS ---
     if (event.httpMethod === 'GET') {
         try {
             const response = await fetch(url, { headers });
-            if (response.status === 404) {
-                return { statusCode: 200, body: JSON.stringify([]) };
-            }
-            if (!response.ok) {
-                const errText = await response.text();
-                console.error("GitHub GET Error:", errText);
-                return { statusCode: response.status, body: errText };
-            }
+            if (response.status === 404) return { statusCode: 200, body: JSON.stringify([]) };
+            if (!response.ok) return { statusCode: response.status, body: await response.text() };
+            
             const data = await response.json();
             const content = Buffer.from(data.content, 'base64').toString('utf8');
             return {
@@ -36,16 +33,43 @@ exports.handler = async function(event, context) {
                 body: content
             };
         } catch (error) {
-            console.error("Catch GET Error:", error.message);
             return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
         }
     }
 
+    // --- SAVE PRODUCTS ---
     if (event.httpMethod === 'POST') {
         try {
             const body = JSON.parse(event.body);
-            const products = body.products;
+            let products = body.products;
 
+            // الفحص: إذا كان المنتج الأول يحتوي على صورة Base64، قم برفع الصورة أولاً كملف مستمر على غيت هب
+            if (products.length > 0 && products[0].image && products[0].image.startsWith('data:image')) {
+                const base64Data = products[0].image.split(',')[1];
+                const fileName = `images/prod_${Date.now()}.jpg`;
+                const imgUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${fileName}`;
+
+                // 1. رفع ملف الصورة إلى GitHub
+                const imgRes = await fetch(imgUrl, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify({
+                        message: 'Upload product image',
+                        content: base64Data,
+                        branch: BRANCH
+                    })
+                });
+
+                if (imgRes.ok) {
+                    // استبدال كود Base64 الضخم برابط الصورة المباشر السريع من GitHub
+                    const rawImageUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${fileName}`;
+                    products[0].image = rawImageUrl;
+                } else {
+                    console.error("Failed to upload image file:", await imgRes.text());
+                }
+            }
+
+            // 2. قراءة ملف products.json للحصول على sha
             let sha = null;
             const getRes = await fetch(url, { headers });
             if (getRes.ok) {
@@ -53,38 +77,28 @@ exports.handler = async function(event, context) {
                 sha = getData.sha;
             }
 
+            // 3. حفظ ملف products.json النهائي
             const contentEncoded = Buffer.from(JSON.stringify(products, null, 2)).toString('base64');
             const putBody = {
-                message: 'Update products via admin panel',
+                message: 'Update products list',
                 content: contentEncoded,
                 branch: BRANCH
             };
-            if (sha) {
-                putBody.sha = sha;
-            }
+            if (sha) putBody.sha = sha;
 
             const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
                 method: 'PUT',
-                headers: {
-                    ...headers,
-                    'Content-Type': 'application/json'
-                },
+                headers,
                 body: JSON.stringify(putBody)
             });
 
             if (!putRes.ok) {
                 const errText = await putRes.text();
-                console.error("GitHub PUT Error:", errText);
                 return { statusCode: putRes.status, body: errText };
             }
 
-            const putData = await putRes.json();
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ success: true, commit: putData.commit.sha })
-            };
+            return { statusCode: 200, body: JSON.stringify({ success: true }) };
         } catch (error) {
-            console.error("Catch POST Error:", error.message);
             return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
         }
     }
