@@ -358,7 +358,7 @@
             </button>
             <div class="text-center mb-6">
                 <h3 class="text-xl font-bold text-white">إضافة منتج جديد</h3>
-                <p class="text-xs text-gray-400 mt-1">قم بتعبئة حقول المنتج لتظهر فوراً لجميع الزوار</p>
+                <p class="text-xs text-gray-400 mt-1">التقاط صورة بالكاميرا أو اختيار صورة من الجهاز لتظهر فوراً</p>
             </div>
             <form onsubmit="handleAddProduct(event)" class="space-y-4">
                 <div>
@@ -387,8 +387,9 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1">رابط صورة المنتج (URL)</label>
-                    <input type="url" id="prodImage" required placeholder="https://images.unsplash.com/..." class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm">
+                    <label class="block text-xs font-bold text-gray-300 mb-1">صورة المنتج (التقاط بالكاميرا أو اختيار ملف)</label>
+                    <input type="file" id="prodImageFile" accept="image/*" capture="environment" class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border focus:border-brand-red focus:outline-none text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-red file:text-white hover:file:bg-brand-darkRed cursor-pointer">
+                    <p class="text-[11px] text-gray-400 mt-1">عند الضغط، سيتم فتح كاميرا الجوال مباشرة (أو المعرض لاختيار صورة).</p>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-300 mb-1">وصف قصير (اختياري)</label>
@@ -540,98 +541,90 @@
             grid.innerHTML = filtered.map(p => `
                 <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red/50 transition-all duration-300 flex flex-col group">
                     <div class="relative aspect-[4/3] overflow-hidden bg-brand-dark">
-                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/500x400/121216/ff0055?text=TIKTOK+MOBILE'">
-                        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-brand-dark/80 backdrop-blur-md border border-brand-border text-xs font-bold text-brand-red">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/500x500/121216/ff0055?text=TIKTOK+MOBILE'">
+                        <span class="absolute top-3 right-3 bg-brand-dark/80 backdrop-blur-md text-brand-red text-xs font-bold px-2.5 py-1 rounded-lg border border-brand-border">
                             ${p.category}
-                        </div>
-                        ${isAdminLoggedIn ? `
-                            <button onclick="deleteProduct(${p.id})" class="absolute top-3 left-3 w-8 h-8 rounded-lg bg-brand-red/80 hover:bg-brand-red text-white flex items-center justify-center transition-colors shadow-lg">
-                                <i class="fa-solid fa-trash text-xs"></i>
-                            </button>
-                        ` : ''}
+                        </span>
                     </div>
-                    <div class="p-4 flex flex-col flex-grow justify-between space-y-3">
-                        <div>
-                            <h3 class="font-bold text-white text-base line-clamp-1 group-hover:text-brand-red transition-colors">${p.title}</h3>
-                            <p class="text-gray-400 text-xs line-clamp-2 mt-1">${p.desc || 'لا يوجد وصف متاح'}</p>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-brand-border/60">
+                    <div class="p-4 flex flex-col flex-grow space-y-2">
+                        <h3 class="text-white font-bold text-base line-clamp-1">${p.title}</h3>
+                        <p class="text-gray-400 text-xs line-clamp-2">${p.desc || 'لا يوجد وصف متاح.'}</p>
+                        <div class="flex items-center justify-between mt-auto pt-3 border-t border-brand-border/60">
                             <div>
-                                <span class="text-xs text-gray-500 block">السعر</span>
-                                <span class="text-brand-red font-black text-lg">${p.price} <span class="text-xs font-normal">د.أ</span></span>
+                                <span class="text-brand-red font-black text-lg">${p.price}</span>
+                                <span class="text-gray-400 text-xs mr-1">د.أ</span>
                             </div>
-                            <div>
-                                <span class="text-xs text-gray-500 block text-left">الكمية</span>
-                                <span class="text-white font-bold text-sm">${p.quantity} قطع</span>
-                            </div>
+                            <span class="text-xs font-semibold px-2 py-1 rounded bg-brand-dark text-gray-300 border border-brand-border">
+                                المتوفر: ${p.quantity}
+                            </span>
                         </div>
-                        <a href="https://wa.me/?text=${encodeURIComponent('مرحباً، أهتم بشراء منتج: ' + p.title + ' بسعر: ' + p.price + ' د.أ')}" target="_blank" class="touch-action-btn w-full py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/40 font-bold text-xs transition-all flex items-center justify-center gap-2">
-                            <i class="fa-brands fa-whatsapp text-base"></i>
-                            <span>طلب عبر الواتساب</span>
-                        </a>
+                        <div class="flex items-center gap-2 pt-2">
+                            <a href="https://wa.me/?text=${encodeURIComponent('مرحباً، أود طلب المنتج: ' + p.title + ' بسعر ' + p.price + ' د.أ')}" target="_blank" class="touch-action-btn flex-1 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-brands fa-whatsapp text-base"></i>
+                                <span>طلب عبر الواتساب</span>
+                            </a>
+                            ${isAdminLoggedIn ? `
+                                <button onclick="deleteProduct(${p.id})" class="touch-action-btn px-3 py-2.5 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40 transition-all">
+                                    <i class="fa-solid fa-trash-can text-sm"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
         function toggleAdminModal() {
-            document.getElementById('adminModal').classList.toggle('hidden');
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-
-        function closeMobileMenu() {
-            document.getElementById('mobileMenu').classList.add('hidden');
+            const modal = document.getElementById('adminModal');
+            modal.classList.toggle('hidden');
         }
 
         function handleAdminLogin(event) {
             event.preventDefault();
-            const user = document.getElementById('adminUsername').value;
-            const pass = document.getElementById('adminPassword').value;
-            const errorDiv = document.getElementById('loginError');
+            const u = document.getElementById('adminUsername').value;
+            const p = document.getElementById('adminPassword').value;
+            const errDiv = document.getElementById('loginError');
 
-            if (user === 'admin' && pass === '123456') {
+            if (u === 'admin' && p === '123456') {
                 isAdminLoggedIn = true;
                 localStorage.setItem('tiktok_admin_login', JSON.stringify(true));
                 toggleAdminModal();
                 updateAdminUI();
-                showToast('تم تسجيل دخول الأدمن بنجاح!');
+                renderProducts();
+                showToast('تم تسجيل الدخول بنجاح كمدير للمحل!');
                 event.target.reset();
-                errorDiv.classList.add('hidden');
+                errDiv.classList.add('hidden');
             } else {
-                errorDiv.classList.remove('hidden');
+                errDiv.classList.remove('hidden');
             }
         }
 
         function updateAdminUI() {
-            const adminBtn = document.getElementById('adminBtn');
-            const adminBtnText = document.getElementById('adminBtnText');
+            const btnText = document.getElementById('adminBtnText');
             const adminIcon = document.getElementById('adminIcon');
-            const addProductBtn = document.getElementById('addProductBtn');
+            const addBtn = document.getElementById('addProductBtn');
 
             if (isAdminLoggedIn) {
-                adminBtnText.innerText = 'خروج الأدمن';
+                btnText.innerText = 'خروج الأدمن';
                 adminIcon.className = 'fa-solid fa-user-check text-emerald-400';
-                adminBtn.onclick = handleAdminLogout;
-                addProductBtn.classList.remove('hidden');
-                addProductBtn.classList.add('flex');
+                document.getElementById('adminBtn').onclick = logoutAdmin;
+                addBtn.classList.remove('hidden');
+                addBtn.classList.add('flex');
             } else {
-                adminBtnText.innerText = 'دخول الأدمن';
+                btnText.innerText = 'دخول الأدمن';
                 adminIcon.className = 'fa-solid fa-user-shield text-brand-red';
-                adminBtn.onclick = toggleAdminModal;
-                addProductBtn.classList.add('hidden');
-                addProductBtn.classList.remove('flex');
+                document.getElementById('adminBtn').onclick = toggleAdminModal;
+                addBtn.classList.add('hidden');
+                addBtn.classList.remove('flex');
             }
-            renderProducts();
         }
 
-        function handleAdminLogout() {
+        function logoutAdmin() {
             isAdminLoggedIn = false;
             localStorage.setItem('tiktok_admin_login', JSON.stringify(false));
             updateAdminUI();
-            showToast('تم تسجيل خروج الأدمن');
+            renderProducts();
+            showToast('تم تسجيل الخروج بنجاح');
         }
 
         function openAddProductModal() {
@@ -642,14 +635,35 @@
             document.getElementById('addProductModal').classList.add('hidden');
         }
 
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
         async function handleAddProduct(event) {
             event.preventDefault();
+            if (!isAdminLoggedIn) return;
+
             const title = document.getElementById('prodTitle').value;
             const price = parseFloat(document.getElementById('prodPrice').value);
             const quantity = parseInt(document.getElementById('prodQuantity').value);
             const category = document.getElementById('prodCategory').value;
-            const image = document.getElementById('prodImage').value;
             const desc = document.getElementById('prodDesc').value;
+            const imageFileinput = document.getElementById('prodImageFile');
+
+            let imageUrl = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=500&auto=format&fit=crop";
+
+            if (imageFileinput.files && imageFileinput.files[0]) {
+                try {
+                    imageUrl = await fileToBase64(imageFileinput.files[0]);
+                } catch (e) {
+                    console.error("Error reading image file:", e);
+                }
+            }
 
             const newProduct = {
                 id: Date.now(),
@@ -657,31 +671,22 @@
                 price,
                 quantity,
                 category,
-                image,
+                image: imageUrl,
                 desc
             };
 
             products.unshift(newProduct);
-            
-            const submitBtn = document.getElementById('saveProductBtn');
-            submitBtn.innerText = 'جاري الحفظ على السحاب...';
-            submitBtn.disabled = true;
-
             await saveProductsToCloud();
-
-            submitBtn.innerText = 'حفظ ونشر المنتج للسحاب';
-            submitBtn.disabled = false;
-
-            closeAddProductModal();
             renderProducts();
-            showToast('تمت إضافة المنتج ونشره لكل الزوار بنجاح!');
+            closeAddProductModal();
+            showToast('تمت إضافة المنتج وحفظه على السحاب!');
             event.target.reset();
         }
 
         async function deleteProduct(id) {
-            if (confirm('هل أنت متأكد من حذف هذا المنتج نهائياً من المتجر؟')) {
+            if (!isAdminLoggedIn) return;
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
                 products = products.filter(p => p.id !== id);
-                showToast('جاري الحذف من السحاب...');
                 await saveProductsToCloud();
                 renderProducts();
                 showToast('تم حذف المنتج بنجاح!');
@@ -690,8 +695,8 @@
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            toastMsg.innerText = msg;
+            const msgSpan = document.getElementById('toastMsg');
+            msgSpan.innerText = msg;
             toast.classList.remove('hidden');
             setTimeout(() => {
                 toast.classList.add('hidden');
