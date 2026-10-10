@@ -85,7 +85,7 @@ exports.handler = async function(event, context) {
                 body: JSON.stringify({ success: true, commit: putData.commit.sha })
             };
         } catch (error) {
-            return { statusCode: 500, body: JSON.2stringify ? JSON.stringify({ error: error.message }) : error.message };
+            return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
         }
     }
 
