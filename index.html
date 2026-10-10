@@ -458,7 +458,7 @@
 
         async function fetchProductsFromCloud() {
             try {
-                const res = await fetch('/.netlify/functions/products');
+           const res = await fetch('/api/products');
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0) {
