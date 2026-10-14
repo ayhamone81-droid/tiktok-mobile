@@ -17,42 +17,16 @@
     "image": "https://share.google/pwXmvt0QxWWxBMJHw",
     "desc": "ضمان شهر"
   },
-  {
-    "id": 1791998931810,
-    "title": "سماعات kin بلوتوث",
-    "price": 5,
-    "quantity": 6,
-    "category": "سماعات",
-    "image": "https://share.google/pwXmvt0QxWWxBMJHw",
-    "desc": "ضمان شهر"
-  },
+
   {
     "id": 1791654871134,
     "title": "321",
     "price": 123,
     "quantity": 123,
     "category": "شواحن",
-    "image": "https://raw.githubusercontent.com/ayhamone81-droid/tiktok-mobile/main/images/prod_1791654869412.jpg",
-    "desc": "ض12213"
-  },
-  {
-    "id": 1791653435292,
-    "title": "ثصض",
-    "price": 1,
-    "quantity": 1,
-    "category": "شواحن",
-    "image": "https://files.catbox.moe/wovxbn.png",
-    "desc": ""
-  },
-  {
-    "id": 1,
-    "title": "شاحن سريع Anker 20W Type-C",
-    "price": 18,
-    "quantity": 15,
-    "category": "شواحن",
-    "image": "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?q=80&w=500&auto=format&fit=crop",
-    "desc": "يدعم الشحن السريع لجميع هواتف الآيفون والأندرويد مع أمان عالي."
-  },
+    "image": "https://raw.githubusercontent.com/ayhamone81
+},
+
   {
     "id": 2,
     "title": "سماعات بلوتوث AirPods Pro 2",
