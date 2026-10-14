@@ -1,13 +1,5 @@
 [
-  {
-    "id": 1791999297294,
-    "title": "سماعات kin بلوتوث",
-    "price": 5,
-    "quantity": 6,
-    "category": "سماعات",
-    "image": "https://share.google/pwXmvt0QxWWxBMJHw",
-    "desc": "ضمان شهر"
-  },
+
   {
     "id": 1791998931810,
     "title": "سماعات kin بلوتوث",
